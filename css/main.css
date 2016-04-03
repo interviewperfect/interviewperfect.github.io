@@ -455,3 +455,10 @@ pre {
     color: #008080; }
   .highlight .il {
     color: #099; }
+
+.spoiler {
+  display: none; }
+
+.spoiler-button {
+  font-size: 20px;
+  display: inline; }

@@ -2,13 +2,197 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>InterviewPerfect</title>
-    <description>Learn how to pass technical interviews from the largest companies out there like Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining step by step the logic behind each solution. Good luck in job searching!
+    <description>Learn how to pass technical interviews from companies such as Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining the step-by-step logic behind each solution. Good luck in job searching!
 </description>
     <link>http://interviewperfect.github.io//</link>
     <atom:link href="http://interviewperfect.github.io//feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 26 Mar 2016 23:09:20 -0700</pubDate>
-    <lastBuildDate>Sat, 26 Mar 2016 23:09:20 -0700</lastBuildDate>
+    <pubDate>Sun, 03 Apr 2016 00:26:50 -0700</pubDate>
+    <lastBuildDate>Sun, 03 Apr 2016 00:26:50 -0700</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
+    
+      <item>
+        <title>[Interview Problem] Sort a K-sorted Array</title>
+        <description>&lt;h2 id=&quot;problem&quot;&gt;Problem&lt;/h2&gt;
+
+&lt;p&gt;We have a very unique array where every number is at most $k - 1$ units away from its correct sorted spot (sorted from least to greatest). Let’s call such an array a k-sorted array. How can we correctly sort a k-sorted array in the most efficient way possible?&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Runtime:&lt;/strong&gt; ideally we can get an &lt;span class=&quot;spoiler&quot;&gt;$O(n \log k)$&lt;/span&gt; solution.&lt;/p&gt;
+
+&lt;h2 id=&quot;ideas-and-solution&quot;&gt;Ideas and solution&lt;/h2&gt;
+
+&lt;p&gt;As before, we always start a problem by trying to consider all possible options.&lt;/p&gt;
+
+&lt;p&gt;Our core problem is we want to sort an array. We can easily solve this problem by just using a naive $O(n \log n)$ sorting algorithm and be done with it &lt;strong&gt;(idea 1)&lt;/strong&gt;. However, this will probably not give us many points with the interviewer.&lt;/p&gt;
+
+&lt;p&gt;What else can we do? Well we know that every number in the array is at most $k - 1$ units away from its correctly sorted spot. Let’s try to take advantage of this property as much as possible.&lt;/p&gt;
+
+&lt;p&gt;Our next approach can be to make the problem simpler by adding constraints to the original problem &lt;strong&gt;(idea 2)&lt;/strong&gt;. Let’s take one number in this array, how can we place it in its correct spot? We know that for a number at index $x$, its correct spot must be one index within the range $[x - (k - 1), x + (k - 1)]$. So does sorting all the numbers within this range put number $x$ in its correct spot? This is actually not necessarily true.&lt;/p&gt;
+
+&lt;p&gt;Let’s take the sorted array as an example: &lt;code class=&quot;highlighter-rouge&quot;&gt;[1, 2, 5, 6, 7, 8, 49, 50, 99, 100]&lt;/code&gt;. Its k-sorted version could be &lt;code class=&quot;highlighter-rouge&quot;&gt;[1, 6, 2, 8, 5, 7, 49, 50, 99, 100]&lt;/code&gt; (k = 3). Let’s take 5 and sort the numbers &lt;code class=&quot;highlighter-rouge&quot;&gt;[2, 8, 5, 7, 49] = [2, 5, 7, 8, 49]&lt;/code&gt;. If we put the partial, sorted array back into the original array, &lt;code class=&quot;highlighter-rouge&quot;&gt;[1, 6, 2, 5, 7, 8, 49, 50, 99, 100]&lt;/code&gt;, 5 is not in its correct spot.&lt;/p&gt;
+
+&lt;p&gt;Our initial attempt to take advantage of the k-sorted property failed. Let’s not give up! In idea 2, we tried to find the correct position for a random number in the array. Let’s make this simplified problem even simpler by trying to find the correct position for the first number in the k-sorted array &lt;strong&gt;(idea 3)&lt;/strong&gt;. We notice that the range of possible correct indices for this number is $[0, k - 1]$. Interesting, this is much less than for a random index $x$, which was $[x - (k - 1), x + (k - 1)]$. For the second number in the k-sorted array, the range of possible correct indices is $[0, k]$ and so on…&lt;/p&gt;
+
+&lt;p&gt;At this point we can see that if we actually sorted the first $k$ numbers, or indices within the range $[0, k - 1]$, of the k-sorted array, the least number in this sort must be the first number in the correctly sorted array. The first number of the correct sorted array cannot be at an index greater than $k - 1$ in the k-sorted array or else it would not be a k-sorted array. So let’s sort the first $k$ numbers, remove the least number, and put it in an empty array. A good start in constructing the correctly sorted array. Our k-sorted array is now one number less but it’s still a k-sorted array! We can abuse this property again by sorting the first k numbers of our smaller k-sorted array, take the least number from the sort, and add it to our partially constructed, correctly sorted array. If we keeping doing this, we can reconstruct our correctly sorted array. Nice! A solution.&lt;/p&gt;
+
+&lt;p&gt;Let’s take a step back. Did we actually make progress though? Our new solution is $O(n k \log k)$ which might or might not be better than a naive sort, which is $O(n \log n)$. It all depends on the value of $k$ (we could actually do $O(n k)$ but I won’t describe it in this post). Well there’s a sweet data structure out there that can use our new solution but achieve an optimal runtime of $O(n \log k)$.&lt;/p&gt;
+
+&lt;p&gt;The data structure is called a &lt;strong&gt;minimum priority queue&lt;/strong&gt;. Construction of this queue takes linear time, which, in our case is $O(k)$. The queue allows us to pop the minimum number in $O(\log k)$ time. Insertion is also $O(\log k)$ time. The idea is to construct a minimum priority queue of the first k numbers of the k-sorted array, pop the minimum and put it in our partially constructed correctly sorted array. Next, we insert the next number in our k-sorted array to our queue and pop the minimum again. This is the second number in our correctly sorted array. We keep doing this for all numbers in the k-sorted array and we will have the correctly sorted array.&lt;/p&gt;
+
+&lt;p&gt;The runtime for this solution is $O(k)$ for queue construction, $O(n \log k)$ for the insertions and $O(n \log k)$ for the minimum pops. Overall, the runtime is $O(n \log k)$.&lt;/p&gt;
+
+&lt;h2 id=&quot;coded-solution-python&quot;&gt;Coded solution (Python)&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def sort(array, k):
+    min_heap = []
+    for i in xrange(len(array)):
+        if len(min_heap) &amp;lt; k:
+            heapq.heappush(min_heap, array[i])
+        else:
+            array[i - k] = heapq.heappop(min_heap)
+            heapq.heappush(min_heap, array[i])
+    for i in xrange(len(array) - k, len(array)):
+        array[i] = heapq.heappop(min_heap)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Sat, 02 Apr 2016 21:57:05 -0700</pubDate>
+        <link>http://interviewperfect.github.io//2016/04/02/sort-a-k-sorted-array.html</link>
+        <guid isPermaLink="true">http://interviewperfect.github.io//2016/04/02/sort-a-k-sorted-array.html</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>[Interview Problem] Godzilla vs 2D City</title>
+        <description>&lt;h2 id=&quot;problem&quot;&gt;Problem&lt;/h2&gt;
+
+&lt;p&gt;There’s a 2D city represented by an array. Each element in the array represents a building. The number in the array represents the building’s height. Whenever a building topples, it topples the next &lt;code class=&quot;highlighter-rouge&quot;&gt;height - 1&lt;/code&gt; buildings after it. Godzilla can only push over one building and can only push from the left side. Which building should Godzilla push so that the most buildings will be destroyed?&lt;/p&gt;
+
+&lt;p&gt;To clarify, buildings that a building topple will also cause buildings after it to topple, creating a chain reaction. For example, for a city represented by the array &lt;code class=&quot;highlighter-rouge&quot;&gt;[1, 1, 2, 3, 5, 1, 2, 1]&lt;/code&gt;, the optimal building to topple is the building at index 2 since it topples the building at index 3 (of height 3) which topples buildings at index 4 and 5. Toppling the building at index 4 causes all buildings afterwards to topple since it’s height is 5. Therefore, toppling the building at index 2 topples 6 buildings by chain reaction and it’s the most out of any other building.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Runtime:&lt;/strong&gt; we want an &lt;span class=&quot;spoiler&quot;&gt;$O(n)$&lt;/span&gt; solution.&lt;/p&gt;
+
+&lt;h2 id=&quot;ideas-and-solution&quot;&gt;Ideas and solution&lt;/h2&gt;
+
+&lt;p&gt;As always, after understanding the solution, we need to try to consider all possible options and not be afraid of exploring an option even though it will obviously lead to an inefficient solution. An inefficient solution is better than no solution.&lt;/p&gt;
+
+&lt;p&gt;The obvious, brute force solution to this problem is to iterate through the array and for each building, we determine how many buildings we topple in total if we topple that building &lt;strong&gt;(idea 1)&lt;/strong&gt;. We can do this using the following Python code. We note that only purely doing this takes $O(n^2)$.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def topple(city, building_index):
+    max_index = building_index + city[building_index] - 1
+    while True:
+        last_max_index = max_index
+        for i in xrange(last_max_index, building_index):
+            if i + city[i] - 1 &amp;gt; max_index:
+                max_index = i + city[i] - 1
+        if last_max_index == max_index:
+            break
+    return max_index - building_index + 1
+
+def inefficient_solution(city):
+    max_buildings_toppled = 0
+    building_index = 0
+    for i in xrange(len(city)):
+        if topple(city, i) &amp;gt; max_buildings_toppled:
+            building_index = i
+    return building_index
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Often a great technique to solving problems is to consider if we are repeating any calculations, thus allowing us to eliminate these steps and make the solution more efficient. Let’s see if we can apply this technique to this problem &lt;strong&gt;(idea 2)&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;We note that in our previous solution, when we called &lt;code class=&quot;highlighter-rouge&quot;&gt;topple&lt;/code&gt; on one building, we are also basically calling &lt;code class=&quot;highlighter-rouge&quot;&gt;topple&lt;/code&gt; on each building this building topples and so on until the chain reaction ends. So if this building topples 3 buildings, why do we need to call &lt;code class=&quot;highlighter-rouge&quot;&gt;topple&lt;/code&gt; on the next 3 buildings if we already tried toppling them? We are repeating these calculations.&lt;/p&gt;
+
+&lt;p&gt;Let’s consider this using a different viewpoint. If one building, Building 3, topples all buildings until Building 8, if there exists a building between Building 3 and Building 8, say Building 5, that will topple all buildings till Building 11, then mustn’t Building 3 topple all buildings till Building 11 since Building 3 also topples Building 5?&lt;/p&gt;
+
+&lt;p&gt;By eliminating these extra calculations, we realize that we have reached our target $O(n)$ solution since we only ever need to “visit” a building once.&lt;/p&gt;
+
+&lt;h2 id=&quot;coded-solution-python&quot;&gt;Coded solution (Python)&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def topple(city, building_index):
+    max_index = building_index + city[building_index] - 1
+    while True:
+        last_max_index = max_index
+        for i in xrange(last_max_index, building_index):
+            if i + city[i] - 1 &amp;gt; max_index:
+                max_index = i + city[i] - 1
+        if last_max_index == max_index:
+            break
+    return max_index - building_index + 1
+
+def inefficient_solution(city):
+    max_buildings_toppled = 0
+    building_index = 0
+    current_building_index = building_index
+    while current_building_index &amp;lt; len(city):
+        number_of_buildings_toppled = topple(city, current_building_index)
+        if number_of_buildings_toppled == 0:
+            current_building_index += 1
+        else:
+            if number_of_buildings_toppled &amp;gt; max_buildings_toppled:
+                building_index = i
+            current_building_index += number_of_buildings_toppled
+    return building_index
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Sat, 02 Apr 2016 20:51:21 -0700</pubDate>
+        <link>http://interviewperfect.github.io//2016/04/02/interview-problem-godzilla-vs-2d-city.html</link>
+        <guid isPermaLink="true">http://interviewperfect.github.io//2016/04/02/interview-problem-godzilla-vs-2d-city.html</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>[Interview Problem] Buying Stocks</title>
+        <description>&lt;h2 id=&quot;problem&quot;&gt;Problem&lt;/h2&gt;
+
+&lt;p&gt;We are interested in buying Amazon stock. Amazon stock prices change once at the start of every day. We are given Amazon stock data for a month, we need to determine two days such that the difference between stock prices for the two days is the greatest and the later day has a larger stock price.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Runtime:&lt;/strong&gt; ideally we can get an &lt;span class=&quot;spoiler&quot;&gt;$O(n)$&lt;/span&gt; solution.&lt;/p&gt;
+
+&lt;h2 id=&quot;ideas-and-solution&quot;&gt;Ideas and solution&lt;/h2&gt;
+
+&lt;p&gt;Remember that the first thing to solving a problem after we understand it is to try to consider all possible options.&lt;/p&gt;
+
+&lt;p&gt;For a problem on arrays, we can first think about sorting &lt;strong&gt;(idea 1)&lt;/strong&gt;. Even though sorting really implies that we are stuck with an $O(n \log n)$ solution, in an interview a solved, inefficient solution is always better than no solution. Inefficient solutions are often easier to come up with and may help lead to more efficient solutions.&lt;/p&gt;
+
+&lt;p&gt;We notice that the solution has a dependency on time, since the day with the greater price must be after the day with the lesser price. So sorting causes us to lose information in the new sorted array, which is not what we want. Relying on a sorted array alone will not be useful to us. Perhaps it’s better to invest our time in something besides sorting.&lt;/p&gt;
+
+&lt;p&gt;The next idea is to add constraints to the problem to make it simpler &lt;strong&gt;(idea 2)&lt;/strong&gt;. Let’s try this: if we must sell a stock at a set specific day, what prior day should we buy the stock on to get the most profit?&lt;/p&gt;
+
+&lt;p&gt;The answer, of course, is the day with the lowest stock price out of all the days before the day we sell. So this makes iterating through the array and keeping a minimum stock price seen very promising. Best of all, our algorithm can still be $O(1)$ doing so.&lt;/p&gt;
+
+&lt;p&gt;So now as we progress in days, we have the minimum stock price we have seen before, and this also means that at each and every new day we encounter, we know the maximal profit we can get if we must sell on this new day. Guess what? We have the $O(1)$ solution now. We just need to iterate through the array, keeping a minimum stock price seen and when as well as maximum profit seen and when (which we can get from minimum stock price seen) and by the end of iterating through the array we will know the maximum profit plus the days with which we achieve this maximum profit.&lt;/p&gt;
+
+&lt;p&gt;We note that this solution is an example of a &lt;strong&gt;greedy algorithm&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;coded-solution-python&quot;&gt;Coded solution (Python)&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def solution(self, stock_prices):
+    first_day = 0
+    second_day = None
+    min_price = stock_prices[0]
+    max_profit = 0
+
+    for i in xrange(1, len(stock_prices)):
+        if stock_prices[i] &amp;lt; min_price:
+            min_price = stock_prices[i]
+            first_day = i
+        elif stock_prices[i] - min_price &amp;gt; max_profit:
+            max_profit = stock_prices[i] - min_price
+            second_day = i
+
+    return max_profit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Sat, 02 Apr 2016 00:58:26 -0700</pubDate>
+        <link>http://interviewperfect.github.io//2016/04/02/buying-stocks.html</link>
+        <guid isPermaLink="true">http://interviewperfect.github.io//2016/04/02/buying-stocks.html</guid>
+        
+        
+      </item>
     
   </channel>
 </rss>

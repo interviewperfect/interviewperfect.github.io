@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>[Interview Problem] Buying Stocks</title>
+  <meta name="description" content="Problem">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://interviewperfect.github.io//2016/04/02/buying-stocks.html">
+  <link rel="alternate" type="application/rss+xml" title="InterviewPerfect" href="http://interviewperfect.github.io//feed.xml">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+  <!-- mathjax config similar to math.stackexchange -->
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$', '$'] ],
+      displayMath: [ ['$$', '$$']],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    messageStyle: "none",
+    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+  });
+
+  button = document.createElement("button");
+  button.className = "spoiler-button";
+  button.innerHTML = "spoiler";
+  button.onclick = function() {
+    $(".spoiler").show();
+    $(button).hide();
+  }
+  $(".spoiler").after(button)
+  </script>
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">InterviewPerfect</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">[Interview Problem] Buying Stocks</h1>
+    <p class="post-meta"><time datetime="2016-04-02T00:58:26-07:00" itemprop="datePublished">Apr 2, 2016</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <h2 id="problem">Problem</h2>
+
+<p>We are interested in buying Amazon stock. Amazon stock prices change once at the start of every day. We are given Amazon stock data for a month, we need to determine two days such that the difference between stock prices for the two days is the greatest and the later day has a larger stock price.</p>
+
+<p><strong>Runtime:</strong> ideally we can get an <span class="spoiler">$O(n)$</span> solution.</p>
+
+<h2 id="ideas-and-solution">Ideas and solution</h2>
+
+<p>Remember that the first thing to solving a problem after we understand it is to try to consider all possible options.</p>
+
+<p>For a problem on arrays, we can first think about sorting <strong>(idea 1)</strong>. Even though sorting really implies that we are stuck with an $O(n \log n)$ solution, in an interview a solved, inefficient solution is always better than no solution. Inefficient solutions are often easier to come up with and may help lead to more efficient solutions.</p>
+
+<p>We notice that the solution has a dependency on time, since the day with the greater price must be after the day with the lesser price. So sorting causes us to lose information in the new sorted array, which is not what we want. Relying on a sorted array alone will not be useful to us. Perhaps it’s better to invest our time in something besides sorting.</p>
+
+<p>The next idea is to add constraints to the problem to make it simpler <strong>(idea 2)</strong>. Let’s try this: if we must sell a stock at a set specific day, what prior day should we buy the stock on to get the most profit?</p>
+
+<p>The answer, of course, is the day with the lowest stock price out of all the days before the day we sell. So this makes iterating through the array and keeping a minimum stock price seen very promising. Best of all, our algorithm can still be $O(1)$ doing so.</p>
+
+<p>So now as we progress in days, we have the minimum stock price we have seen before, and this also means that at each and every new day we encounter, we know the maximal profit we can get if we must sell on this new day. Guess what? We have the $O(1)$ solution now. We just need to iterate through the array, keeping a minimum stock price seen and when as well as maximum profit seen and when (which we can get from minimum stock price seen) and by the end of iterating through the array we will know the maximum profit plus the days with which we achieve this maximum profit.</p>
+
+<p>We note that this solution is an example of a <strong>greedy algorithm</strong>.</p>
+
+<h2 id="coded-solution-python">Coded solution (Python)</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>def solution(self, stock_prices):
+    first_day = 0
+    second_day = None
+    min_price = stock_prices[0]
+    max_profit = 0
+
+    for i in xrange(1, len(stock_prices)):
+        if stock_prices[i] &lt; min_price:
+            min_price = stock_prices[i]
+            first_day = i
+        elif stock_prices[i] - min_price &gt; max_profit:
+            max_profit = stock_prices[i] - min_price
+            second_day = i
+
+    return max_profit
+</code></pre>
+</div>
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">InterviewPerfect</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>Need to get a solution clarified? Want to correct an inaccuracy? General inquiries?</br></br> Please email me and I will try to reply as fast as possible: </li>
+          <li><a href="mailto:interviewperfectblog@gmail.com">interviewperfectblog@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Learn how to pass technical interviews from companies such as Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining the step-by-step logic behind each solution. Good luck in job searching!
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

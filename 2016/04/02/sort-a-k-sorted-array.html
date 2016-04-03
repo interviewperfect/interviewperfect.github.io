@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>[Interview Problem] Sort a K-sorted Array</title>
+  <meta name="description" content="Problem">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://interviewperfect.github.io//2016/04/02/sort-a-k-sorted-array.html">
+  <link rel="alternate" type="application/rss+xml" title="InterviewPerfect" href="http://interviewperfect.github.io//feed.xml">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+  <!-- mathjax config similar to math.stackexchange -->
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$', '$'] ],
+      displayMath: [ ['$$', '$$']],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    messageStyle: "none",
+    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+  });
+
+  button = document.createElement("button");
+  button.className = "spoiler-button";
+  button.innerHTML = "spoiler";
+  button.onclick = function() {
+    $(".spoiler").show();
+    $(button).hide();
+  }
+  $(".spoiler").after(button)
+  </script>
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">InterviewPerfect</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">[Interview Problem] Sort a K-sorted Array</h1>
+    <p class="post-meta"><time datetime="2016-04-02T21:57:05-07:00" itemprop="datePublished">Apr 2, 2016</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <h2 id="problem">Problem</h2>
+
+<p>We have a very unique array where every number is at most $k - 1$ units away from its correct sorted spot (sorted from least to greatest). Let’s call such an array a k-sorted array. How can we correctly sort a k-sorted array in the most efficient way possible?</p>
+
+<p><strong>Runtime:</strong> ideally we can get an <span class="spoiler">$O(n \log k)$</span> solution.</p>
+
+<h2 id="ideas-and-solution">Ideas and solution</h2>
+
+<p>As before, we always start a problem by trying to consider all possible options.</p>
+
+<p>Our core problem is we want to sort an array. We can easily solve this problem by just using a naive $O(n \log n)$ sorting algorithm and be done with it <strong>(idea 1)</strong>. However, this will probably not give us many points with the interviewer.</p>
+
+<p>What else can we do? Well we know that every number in the array is at most $k - 1$ units away from its correctly sorted spot. Let’s try to take advantage of this property as much as possible.</p>
+
+<p>Our next approach can be to make the problem simpler by adding constraints to the original problem <strong>(idea 2)</strong>. Let’s take one number in this array, how can we place it in its correct spot? We know that for a number at index $x$, its correct spot must be one index within the range $[x - (k - 1), x + (k - 1)]$. So does sorting all the numbers within this range put number $x$ in its correct spot? This is actually not necessarily true.</p>
+
+<p>Let’s take the sorted array as an example: <code class="highlighter-rouge">[1, 2, 5, 6, 7, 8, 49, 50, 99, 100]</code>. Its k-sorted version could be <code class="highlighter-rouge">[1, 6, 2, 8, 5, 7, 49, 50, 99, 100]</code> (k = 3). Let’s take 5 and sort the numbers <code class="highlighter-rouge">[2, 8, 5, 7, 49] = [2, 5, 7, 8, 49]</code>. If we put the partial, sorted array back into the original array, <code class="highlighter-rouge">[1, 6, 2, 5, 7, 8, 49, 50, 99, 100]</code>, 5 is not in its correct spot.</p>
+
+<p>Our initial attempt to take advantage of the k-sorted property failed. Let’s not give up! In idea 2, we tried to find the correct position for a random number in the array. Let’s make this simplified problem even simpler by trying to find the correct position for the first number in the k-sorted array <strong>(idea 3)</strong>. We notice that the range of possible correct indices for this number is $[0, k - 1]$. Interesting, this is much less than for a random index $x$, which was $[x - (k - 1), x + (k - 1)]$. For the second number in the k-sorted array, the range of possible correct indices is $[0, k]$ and so on…</p>
+
+<p>At this point we can see that if we actually sorted the first $k$ numbers, or indices within the range $[0, k - 1]$, of the k-sorted array, the least number in this sort must be the first number in the correctly sorted array. The first number of the correct sorted array cannot be at an index greater than $k - 1$ in the k-sorted array or else it would not be a k-sorted array. So let’s sort the first $k$ numbers, remove the least number, and put it in an empty array. A good start in constructing the correctly sorted array. Our k-sorted array is now one number less but it’s still a k-sorted array! We can abuse this property again by sorting the first k numbers of our smaller k-sorted array, take the least number from the sort, and add it to our partially constructed, correctly sorted array. If we keeping doing this, we can reconstruct our correctly sorted array. Nice! A solution.</p>
+
+<p>Let’s take a step back. Did we actually make progress though? Our new solution is $O(n k \log k)$ which might or might not be better than a naive sort, which is $O(n \log n)$. It all depends on the value of $k$ (we could actually do $O(n k)$ but I won’t describe it in this post). Well there’s a sweet data structure out there that can use our new solution but achieve an optimal runtime of $O(n \log k)$.</p>
+
+<p>The data structure is called a <strong>minimum priority queue</strong>. Construction of this queue takes linear time, which, in our case is $O(k)$. The queue allows us to pop the minimum number in $O(\log k)$ time. Insertion is also $O(\log k)$ time. The idea is to construct a minimum priority queue of the first k numbers of the k-sorted array, pop the minimum and put it in our partially constructed correctly sorted array. Next, we insert the next number in our k-sorted array to our queue and pop the minimum again. This is the second number in our correctly sorted array. We keep doing this for all numbers in the k-sorted array and we will have the correctly sorted array.</p>
+
+<p>The runtime for this solution is $O(k)$ for queue construction, $O(n \log k)$ for the insertions and $O(n \log k)$ for the minimum pops. Overall, the runtime is $O(n \log k)$.</p>
+
+<h2 id="coded-solution-python">Coded solution (Python)</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>def sort(array, k):
+    min_heap = []
+    for i in xrange(len(array)):
+        if len(min_heap) &lt; k:
+            heapq.heappush(min_heap, array[i])
+        else:
+            array[i - k] = heapq.heappop(min_heap)
+            heapq.heappush(min_heap, array[i])
+    for i in xrange(len(array) - k, len(array)):
+        array[i] = heapq.heappop(min_heap)
+</code></pre>
+</div>
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">InterviewPerfect</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>Need to get a solution clarified? Want to correct an inaccuracy? General inquiries?</br></br> Please email me and I will try to reply as fast as possible: </li>
+          <li><a href="mailto:interviewperfectblog@gmail.com">interviewperfectblog@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Learn how to pass technical interviews from companies such as Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining the step-by-step logic behind each solution. Good luck in job searching!
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

@@ -7,12 +7,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>InterviewPerfect</title>
-  <meta name="description" content="Learn how to pass technical interviews from the largest companies out there like Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining step by step the logic behind each solution. Good luck in job searching!
+  <meta name="description" content="Learn how to pass technical interviews from companies such as Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining the step-by-step logic behind each solution. Good luck in job searching!
 ">
 
   <link rel="stylesheet" href="/css/main.css">
   <link rel="canonical" href="http://interviewperfect.github.io//">
   <link rel="alternate" type="application/rss+xml" title="InterviewPerfect" href="http://interviewperfect.github.io//feed.xml">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+  <!-- mathjax config similar to math.stackexchange -->
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$', '$'] ],
+      displayMath: [ ['$$', '$$']],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    messageStyle: "none",
+    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+  });
+
+  button = document.createElement("button");
+  button.className = "spoiler-button";
+  button.innerHTML = "spoiler";
+  button.onclick = function() {
+    $(".spoiler").show();
+    $(button).hide();
+  }
+  $(".spoiler").after(button)
+  </script>
 </head>
 
 
@@ -61,6 +87,30 @@
 
   <ul class="post-list">
     
+      <li>
+        <span class="post-meta">Apr 2, 2016</span>
+
+        <h2>
+          <a class="post-link" href="/2016/04/02/sort-a-k-sorted-array.html">[Interview Problem] Sort a K-sorted Array</a>
+        </h2>
+      </li>
+    
+      <li>
+        <span class="post-meta">Apr 2, 2016</span>
+
+        <h2>
+          <a class="post-link" href="/2016/04/02/interview-problem-godzilla-vs-2d-city.html">[Interview Problem] Godzilla vs 2D City</a>
+        </h2>
+      </li>
+    
+      <li>
+        <span class="post-meta">Apr 2, 2016</span>
+
+        <h2>
+          <a class="post-link" href="/2016/04/02/buying-stocks.html">[Interview Problem] Buying Stocks</a>
+        </h2>
+      </li>
+    
   </ul>
 
   <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
@@ -79,8 +129,8 @@
     <div class="footer-col-wrapper">
       <div class="footer-col footer-col-1">
         <ul class="contact-list">
-          <li>InterviewPerfect</li>
-          <li><a href="mailto:"></a></li>
+          <li>Need to get a solution clarified? Want to correct an inaccuracy? General inquiries?</br></br> Please email me and I will try to reply as fast as possible: </li>
+          <li><a href="mailto:interviewperfectblog@gmail.com">interviewperfectblog@gmail.com</a></li>
         </ul>
       </div>
 
@@ -93,7 +143,7 @@
       </div>
 
       <div class="footer-col footer-col-3">
-        <p>Learn how to pass technical interviews from the largest companies out there like Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining step by step the logic behind each solution. Good luck in job searching!
+        <p>Learn how to pass technical interviews from companies such as Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining the step-by-step logic behind each solution. Good luck in job searching!
 </p>
       </div>
     </div>

@@ -7,12 +7,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>About</title>
-  <meta name="description" content="Learn how to pass technical interviews from the largest companies out there like Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining step by step the logic behind each solution. Good luck in job searching!
+  <meta name="description" content="Learn how to pass technical interviews from companies such as Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining the step-by-step logic behind each solution. Good luck in job searching!
 ">
 
   <link rel="stylesheet" href="/css/main.css">
   <link rel="canonical" href="http://interviewperfect.github.io//about/">
   <link rel="alternate" type="application/rss+xml" title="InterviewPerfect" href="http://interviewperfect.github.io//feed.xml">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+  <!-- mathjax config similar to math.stackexchange -->
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$', '$'] ],
+      displayMath: [ ['$$', '$$']],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    messageStyle: "none",
+    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+  });
+
+  button = document.createElement("button");
+  button.className = "spoiler-button";
+  button.innerHTML = "spoiler";
+  button.onclick = function() {
+    $(".spoiler").show();
+    $(button).hide();
+  }
+  $(".spoiler").after(button)
+  </script>
 </head>
 
 
@@ -62,7 +88,7 @@
   </header>
 
   <div class="post-content">
-    <p>Learn how to pass technical interviews from the largest companies out there like Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining step by step the logic behind each solution. Good luck in job searching!</p>
+    <p>Learn how to pass technical interviews from companies such as Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining the step-by-step logic behind each solution. Good luck in job searching!</p>
 
 
   </div>
@@ -81,8 +107,8 @@
     <div class="footer-col-wrapper">
       <div class="footer-col footer-col-1">
         <ul class="contact-list">
-          <li>InterviewPerfect</li>
-          <li><a href="mailto:"></a></li>
+          <li>Need to get a solution clarified? Want to correct an inaccuracy? General inquiries?</br></br> Please email me and I will try to reply as fast as possible: </li>
+          <li><a href="mailto:interviewperfectblog@gmail.com">interviewperfectblog@gmail.com</a></li>
         </ul>
       </div>
 
@@ -95,7 +121,7 @@
       </div>
 
       <div class="footer-col footer-col-3">
-        <p>Learn how to pass technical interviews from the largest companies out there like Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining step by step the logic behind each solution. Good luck in job searching!
+        <p>Learn how to pass technical interviews from companies such as Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining the step-by-step logic behind each solution. Good luck in job searching!
 </p>
       </div>
     </div>

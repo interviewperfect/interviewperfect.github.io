@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>[Interview Problem] Godzilla vs 2D City</title>
+  <meta name="description" content="Problem">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://interviewperfect.github.io//2016/04/02/interview-problem-godzilla-vs-2d-city.html">
+  <link rel="alternate" type="application/rss+xml" title="InterviewPerfect" href="http://interviewperfect.github.io//feed.xml">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+  <!-- mathjax config similar to math.stackexchange -->
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$', '$'] ],
+      displayMath: [ ['$$', '$$']],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    messageStyle: "none",
+    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+  });
+
+  button = document.createElement("button");
+  button.className = "spoiler-button";
+  button.innerHTML = "spoiler";
+  button.onclick = function() {
+    $(".spoiler").show();
+    $(button).hide();
+  }
+  $(".spoiler").after(button)
+  </script>
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">InterviewPerfect</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">[Interview Problem] Godzilla vs 2D City</h1>
+    <p class="post-meta"><time datetime="2016-04-02T20:51:21-07:00" itemprop="datePublished">Apr 2, 2016</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <h2 id="problem">Problem</h2>
+
+<p>There’s a 2D city represented by an array. Each element in the array represents a building. The number in the array represents the building’s height. Whenever a building topples, it topples the next <code class="highlighter-rouge">height - 1</code> buildings after it. Godzilla can only push over one building and can only push from the left side. Which building should Godzilla push so that the most buildings will be destroyed?</p>
+
+<p>To clarify, buildings that a building topple will also cause buildings after it to topple, creating a chain reaction. For example, for a city represented by the array <code class="highlighter-rouge">[1, 1, 2, 3, 5, 1, 2, 1]</code>, the optimal building to topple is the building at index 2 since it topples the building at index 3 (of height 3) which topples buildings at index 4 and 5. Toppling the building at index 4 causes all buildings afterwards to topple since it’s height is 5. Therefore, toppling the building at index 2 topples 6 buildings by chain reaction and it’s the most out of any other building.</p>
+
+<p><strong>Runtime:</strong> we want an <span class="spoiler">$O(n)$</span> solution.</p>
+
+<h2 id="ideas-and-solution">Ideas and solution</h2>
+
+<p>As always, after understanding the solution, we need to try to consider all possible options and not be afraid of exploring an option even though it will obviously lead to an inefficient solution. An inefficient solution is better than no solution.</p>
+
+<p>The obvious, brute force solution to this problem is to iterate through the array and for each building, we determine how many buildings we topple in total if we topple that building <strong>(idea 1)</strong>. We can do this using the following Python code. We note that only purely doing this takes $O(n^2)$.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>def topple(city, building_index):
+    max_index = building_index + city[building_index] - 1
+    while True:
+        last_max_index = max_index
+        for i in xrange(last_max_index, building_index):
+            if i + city[i] - 1 &gt; max_index:
+                max_index = i + city[i] - 1
+        if last_max_index == max_index:
+            break
+    return max_index - building_index + 1
+
+def inefficient_solution(city):
+    max_buildings_toppled = 0
+    building_index = 0
+    for i in xrange(len(city)):
+        if topple(city, i) &gt; max_buildings_toppled:
+            building_index = i
+    return building_index
+</code></pre>
+</div>
+
+<p>Often a great technique to solving problems is to consider if we are repeating any calculations, thus allowing us to eliminate these steps and make the solution more efficient. Let’s see if we can apply this technique to this problem <strong>(idea 2)</strong>.</p>
+
+<p>We note that in our previous solution, when we called <code class="highlighter-rouge">topple</code> on one building, we are also basically calling <code class="highlighter-rouge">topple</code> on each building this building topples and so on until the chain reaction ends. So if this building topples 3 buildings, why do we need to call <code class="highlighter-rouge">topple</code> on the next 3 buildings if we already tried toppling them? We are repeating these calculations.</p>
+
+<p>Let’s consider this using a different viewpoint. If one building, Building 3, topples all buildings until Building 8, if there exists a building between Building 3 and Building 8, say Building 5, that will topple all buildings till Building 11, then mustn’t Building 3 topple all buildings till Building 11 since Building 3 also topples Building 5?</p>
+
+<p>By eliminating these extra calculations, we realize that we have reached our target $O(n)$ solution since we only ever need to “visit” a building once.</p>
+
+<h2 id="coded-solution-python">Coded solution (Python)</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>def topple(city, building_index):
+    max_index = building_index + city[building_index] - 1
+    while True:
+        last_max_index = max_index
+        for i in xrange(last_max_index, building_index):
+            if i + city[i] - 1 &gt; max_index:
+                max_index = i + city[i] - 1
+        if last_max_index == max_index:
+            break
+    return max_index - building_index + 1
+
+def inefficient_solution(city):
+    max_buildings_toppled = 0
+    building_index = 0
+    current_building_index = building_index
+    while current_building_index &lt; len(city):
+        number_of_buildings_toppled = topple(city, current_building_index)
+        if number_of_buildings_toppled == 0:
+            current_building_index += 1
+        else:
+            if number_of_buildings_toppled &gt; max_buildings_toppled:
+                building_index = i
+            current_building_index += number_of_buildings_toppled
+    return building_index
+</code></pre>
+</div>
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">InterviewPerfect</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>Need to get a solution clarified? Want to correct an inaccuracy? General inquiries?</br></br> Please email me and I will try to reply as fast as possible: </li>
+          <li><a href="mailto:interviewperfectblog@gmail.com">interviewperfectblog@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Learn how to pass technical interviews from companies such as Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining the step-by-step logic behind each solution. Good luck in job searching!
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
