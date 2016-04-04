@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>[Interview Problem] Maximum Keener</title>
+  <meta name="description" content="This is an explanation for the “Course Schedule” problem on Leetcode.">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://interviewperfect.github.io//interview-problem-maximum-keener/">
+  <link rel="alternate" type="application/rss+xml" title="InterviewPerfect" href="http://interviewperfect.github.io//feed.xml">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+  <!-- mathjax config similar to math.stackexchange -->
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$', '$'] ],
+      displayMath: [ ['$$', '$$']],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    messageStyle: "none",
+    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+  });
+
+  button = document.createElement("button");
+  button.className = "spoiler-button";
+  button.innerHTML = "spoiler";
+  button.onclick = function() {
+    $(".spoiler").show();
+    $(button).hide();
+  }
+  $(".spoiler").after(button)
+  </script>
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">InterviewPerfect</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+            
+              <a class="page-link" href="/about/">About</a>
+            
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+            
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">[Interview Problem] Maximum Keener</h1>
+    <p class="post-meta">
+        
+            
+            <a href="/categories/easy">easy</a>
+        
+            
+            <a href="/categories/graphs">graphs</a>
+        
+    </p>
+    <p class="post-meta">
+        <time datetime="2016-04-03T15:19:06-07:00" itemprop="datePublished">Apr 3, 2016</time>
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>This is an explanation for the “Course Schedule” problem on Leetcode.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>Basic understanding of graph algorithms.</p>
+
+<h2 id="problem">Problem</h2>
+
+<p>There are $n$ courses you want to take. You number them from $[0, n - 1]$. Each course has 0 or more prerequisites and they are given to you in an array of pairs of numbers, where the first number in the pair is the course and the second number in the pair is its prerequisite.</p>
+
+<p>For example, <code class="highlighter-rouge">[[1,0],[1,2]]</code>. Here, course 1 has two prerequisite courses, courses 0 and 2.</p>
+
+<p>Given a course schedule, we want to know whether we can take all courses, like a true keener. In the previous example, we are able to take all courses since we can first take course 0, then course 2, then take course 1.</p>
+
+<p>In this example, <code class="highlighter-rouge">[[1,0],[0,1]]</code>, we cannot since if we wanted to take course 1, we needed to take course 0 and vice versa.</p>
+
+<h2 id="ideas-and-solution">Ideas and solution</h2>
+
+<p>The key to this problem is to identify that it’s a graph-related problem (specifically a directed graph). The courses are the nodes of the graph and the directed vertices are the prerequisite pairs. Knowing this, the problem can actually be solved very quickly with a basic graph algorithm.</p>
+
+<p>After understanding that this is a graph problem, we need to try to establish connections between certain graph properties and the problem’s properties. We note that in the problem definition, the example of a course schedule that does not work has a directed cycle in its graph. Specifically, the entire graph that represents that schedule is a directed cycle.</p>
+
+<div class="image-center"><img src="http://imgur.com/gI9dKto.jpg" width="400" /></div>
+
+<p>Now exploring this directed cycle idea further, we notice that for any course schedule who’s corresponding graph has a schedule, we will not be able to take all courses in the schedule. So all we need now is an algorithm that can quickly detect a directed cycle in a graph.</p>
+
+<div class="image-center"><img src="http://imgur.com/J3esOZb.jpg" width="400" /></div>
+
+<p>Fortunately, this is a very popular problem and one method to detect directed cycles in a directed graph is to perform a <strong>topological sort</strong> on its nodes. The definition of a topological sort by Wikipedia is:</p>
+
+<blockquote>
+  <p>A linear ordering of its vertices such that for every directed edge uv from vertex u to vertex v, u comes before v in the ordering</p>
+</blockquote>
+
+<p>If there was a cycle in a graph, and vertex u and v was part of the cycle, then no topological sort can exist since u will have to simultaneously come before v and after v in the sort, which is not possible. A topological sort can be done with both a <a href="https://en.wikipedia.org/wiki/Topological_sorting#Depth-first_search">DFS</a> and a <a href="https://www.quora.com/Can-topological-sorting-be-done-using-BFS">BFS</a>.</p>
+
+<p>The complexity of both algorithms is $O(V + E)$ where $V$ is the number of vertices and $E$ is the number of edges.</p>
+
+<h2 id="code-solution-python">Code solution (Python)</h2>
+
+<h3 id="bfs">BFS</h3>
+
+<p>The indegree of a node is the number of edges pointing at the node. The idea of the BFS solution is to find a node with an indegree of 0, remove it and all its out-going edges from the graph, and rinse and repeat. If there comes a point where there are no nodes with indegree of 0, but there are still nodes left in the graph, the graph has a cycle. Else, the graph has no cycle.</p>
+
+<p>Note, this relates to a topological sort because we are removing nodes in the graph in topological order.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>def bfs_solution(num_courses, prerequisites):
+    # graph represented as adjacency lists
+    graph = [[] for _ in xrange(num_courses)]
+    # construct graph
+    for course, prereq in prerequisites:
+        graph[prereq].append(course)
+
+    # determine in-degrees for each course
+    indegrees = [0 for _ in xrange(num_courses)]
+    for neighbours in graph:
+        for neighbour in neighbours:
+            indegrees[neighbour]++
+
+    for i in xrange(num_courses):
+        course_indegree_zero = None
+        for course in xrange(num_courses):
+            if indegrees[course] == 0:
+                course_indegree_zero = course
+                break
+        if course_indegree_zero == None:
+            return False
+        indegrees[course_indegree_zero] = -1
+        for neighbour in graph[course_indegree_zero]:
+            indegrees[course] -= 1
+    return True
+</code></pre>
+</div>
+
+<h3 id="dfs">DFS</h3>
+
+<p>The idea of the DFS solution is to basically conduct a DFS and if we encounter a <strong>back edge</strong>, which is basically reaching a node that is currently seen in the DFS but not completed, then there is a cycle. Every time we open a node for DFS, we mark it as -1 and if we see another node that is marked as -1 in the DFS, then we have encountered a seen but incomplete node and thus a back edge.</p>
+
+<p>If we complete a node, we mark the node as 1. This relates to a topological sort because we complete nodes in a topological order.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>def dfs_cycle_detected(course, graph, visited):
+    if visited[course] == -1:
+        return True
+    elif visited[course] == 1:
+        return False
+    visited[course] == -1
+    for i in graph[course]:
+        if dfs_cycle_detected(i, graph, visited):
+            return True
+    visited[course] == 1
+    return False
+
+# if there is a course n has a prerequisite course j, then there is a vertex from j to n in the graph
+def dfs_solution(num_courses, prerequisites):
+    # graph represented as adjacency lists
+    graph = [[] for _ in xrange(num_courses)]
+    # visited array, one element for each course
+    #   value = 0, not yet visited
+    #   value = -1, course is being depth-first-searched but hasn't completed yet
+    #   value = 1, course was depth-first-searched and it completed without detecting a cycle
+    visited = [0 for _ in xrange(num_courses)]
+    # construct graph
+    for course, prereq in prerequisites:
+        graph[prereq].append(course)
+    for course in xrange(num_courses):
+        if dfs_cycle_detected(course, graph, visited):
+            return False
+    return True
+</code></pre>
+</div>
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">InterviewPerfect</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>Need to get a solution clarified? Want to correct an inaccuracy? General inquiries?</br></br> Please email me and I will try to reply as fast as possible: </li>
+          <li><a href="mailto:interviewperfectblog@gmail.com">interviewperfectblog@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Learn how to pass technical interviews from companies such as Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining the step-by-step logic behind each solution. Good luck in job searching!
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

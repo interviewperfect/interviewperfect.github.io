@@ -6,9 +6,133 @@
 </description>
     <link>http://interviewperfect.github.io//</link>
     <atom:link href="http://interviewperfect.github.io//feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 03 Apr 2016 00:26:50 -0700</pubDate>
-    <lastBuildDate>Sun, 03 Apr 2016 00:26:50 -0700</lastBuildDate>
+    <pubDate>Sun, 03 Apr 2016 17:56:53 -0700</pubDate>
+    <lastBuildDate>Sun, 03 Apr 2016 17:56:53 -0700</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
+    
+      <item>
+        <title>[Interview Problem] Maximum Keener</title>
+        <description>&lt;p&gt;This is an explanation for the “Course Schedule” problem on Leetcode.&lt;/p&gt;
+
+&lt;h2 id=&quot;prerequisites&quot;&gt;Prerequisites&lt;/h2&gt;
+
+&lt;p&gt;Basic understanding of graph algorithms.&lt;/p&gt;
+
+&lt;h2 id=&quot;problem&quot;&gt;Problem&lt;/h2&gt;
+
+&lt;p&gt;There are $n$ courses you want to take. You number them from $[0, n - 1]$. Each course has 0 or more prerequisites and they are given to you in an array of pairs of numbers, where the first number in the pair is the course and the second number in the pair is its prerequisite.&lt;/p&gt;
+
+&lt;p&gt;For example, &lt;code class=&quot;highlighter-rouge&quot;&gt;[[1,0],[1,2]]&lt;/code&gt;. Here, course 1 has two prerequisite courses, courses 0 and 2.&lt;/p&gt;
+
+&lt;p&gt;Given a course schedule, we want to know whether we can take all courses, like a true keener. In the previous example, we are able to take all courses since we can first take course 0, then course 2, then take course 1.&lt;/p&gt;
+
+&lt;p&gt;In this example, &lt;code class=&quot;highlighter-rouge&quot;&gt;[[1,0],[0,1]]&lt;/code&gt;, we cannot since if we wanted to take course 1, we needed to take course 0 and vice versa.&lt;/p&gt;
+
+&lt;h2 id=&quot;ideas-and-solution&quot;&gt;Ideas and solution&lt;/h2&gt;
+
+&lt;p&gt;The key to this problem is to identify that it’s a graph-related problem (specifically a directed graph). The courses are the nodes of the graph and the directed vertices are the prerequisite pairs. Knowing this, the problem can actually be solved very quickly with a basic graph algorithm.&lt;/p&gt;
+
+&lt;p&gt;After understanding that this is a graph problem, we need to try to establish connections between certain graph properties and the problem’s properties. We note that in the problem definition, the example of a course schedule that does not work has a directed cycle in its graph. Specifically, the entire graph that represents that schedule is a directed cycle.&lt;/p&gt;
+
+&lt;div class=&quot;image-center&quot;&gt;&lt;img src=&quot;http://imgur.com/gI9dKto.jpg&quot; width=&quot;400&quot; /&gt;&lt;/div&gt;
+
+&lt;p&gt;Now exploring this directed cycle idea further, we notice that for any course schedule who’s corresponding graph has a schedule, we will not be able to take all courses in the schedule. So all we need now is an algorithm that can quickly detect a directed cycle in a graph.&lt;/p&gt;
+
+&lt;div class=&quot;image-center&quot;&gt;&lt;img src=&quot;http://imgur.com/J3esOZb.jpg&quot; width=&quot;400&quot; /&gt;&lt;/div&gt;
+
+&lt;p&gt;Fortunately, this is a very popular problem and one method to detect directed cycles in a directed graph is to perform a &lt;strong&gt;topological sort&lt;/strong&gt; on its nodes. The definition of a topological sort by Wikipedia is:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;A linear ordering of its vertices such that for every directed edge uv from vertex u to vertex v, u comes before v in the ordering&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;If there was a cycle in a graph, and vertex u and v was part of the cycle, then no topological sort can exist since u will have to simultaneously come before v and after v in the sort, which is not possible. A topological sort can be done with both a &lt;a href=&quot;https://en.wikipedia.org/wiki/Topological_sorting#Depth-first_search&quot;&gt;DFS&lt;/a&gt; and a &lt;a href=&quot;https://www.quora.com/Can-topological-sorting-be-done-using-BFS&quot;&gt;BFS&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The complexity of both algorithms is $O(V + E)$ where $V$ is the number of vertices and $E$ is the number of edges.&lt;/p&gt;
+
+&lt;h2 id=&quot;code-solution-python&quot;&gt;Code solution (Python)&lt;/h2&gt;
+
+&lt;h3 id=&quot;bfs&quot;&gt;BFS&lt;/h3&gt;
+
+&lt;p&gt;The indegree of a node is the number of edges pointing at the node. The idea of the BFS solution is to find a node with an indegree of 0, remove it and all its out-going edges from the graph, and rinse and repeat. If there comes a point where there are no nodes with indegree of 0, but there are still nodes left in the graph, the graph has a cycle. Else, the graph has no cycle.&lt;/p&gt;
+
+&lt;p&gt;Note, this relates to a topological sort because we are removing nodes in the graph in topological order.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def bfs_solution(num_courses, prerequisites):
+    # graph represented as adjacency lists
+    graph = [[] for _ in xrange(num_courses)]
+    # construct graph
+    for course, prereq in prerequisites:
+        graph[prereq].append(course)
+
+    # determine in-degrees for each course
+    indegrees = [0 for _ in xrange(num_courses)]
+    for neighbours in graph:
+        for neighbour in neighbours:
+            indegrees[neighbour]++
+
+    for i in xrange(num_courses):
+        course_indegree_zero = None
+        for course in xrange(num_courses):
+            if indegrees[course] == 0:
+                course_indegree_zero = course
+                break
+        if course_indegree_zero == None:
+            return False
+        indegrees[course_indegree_zero] = -1
+        for neighbour in graph[course_indegree_zero]:
+            indegrees[course] -= 1
+    return True
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;dfs&quot;&gt;DFS&lt;/h3&gt;
+
+&lt;p&gt;The idea of the DFS solution is to basically conduct a DFS and if we encounter a &lt;strong&gt;back edge&lt;/strong&gt;, which is basically reaching a node that is currently seen in the DFS but not completed, then there is a cycle. Every time we open a node for DFS, we mark it as -1 and if we see another node that is marked as -1 in the DFS, then we have encountered a seen but incomplete node and thus a back edge.&lt;/p&gt;
+
+&lt;p&gt;If we complete a node, we mark the node as 1. This relates to a topological sort because we complete nodes in a topological order.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def dfs_cycle_detected(course, graph, visited):
+    if visited[course] == -1:
+        return True
+    elif visited[course] == 1:
+        return False
+    visited[course] == -1
+    for i in graph[course]:
+        if dfs_cycle_detected(i, graph, visited):
+            return True
+    visited[course] == 1
+    return False
+
+# if there is a course n has a prerequisite course j, then there is a vertex from j to n in the graph
+def dfs_solution(num_courses, prerequisites):
+    # graph represented as adjacency lists
+    graph = [[] for _ in xrange(num_courses)]
+    # visited array, one element for each course
+    #   value = 0, not yet visited
+    #   value = -1, course is being depth-first-searched but hasn&#39;t completed yet
+    #   value = 1, course was depth-first-searched and it completed without detecting a cycle
+    visited = [0 for _ in xrange(num_courses)]
+    # construct graph
+    for course, prereq in prerequisites:
+        graph[prereq].append(course)
+    for course in xrange(num_courses):
+        if dfs_cycle_detected(course, graph, visited):
+            return False
+    return True
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Sun, 03 Apr 2016 15:19:06 -0700</pubDate>
+        <link>http://interviewperfect.github.io//interview-problem-maximum-keener/</link>
+        <guid isPermaLink="true">http://interviewperfect.github.io//interview-problem-maximum-keener/</guid>
+        
+        
+        <category>easy</category>
+        
+        <category>graphs</category>
+        
+      </item>
     
       <item>
         <title>[Interview Problem] Sort a K-sorted Array</title>
@@ -56,9 +180,13 @@
 &lt;/div&gt;
 </description>
         <pubDate>Sat, 02 Apr 2016 21:57:05 -0700</pubDate>
-        <link>http://interviewperfect.github.io//2016/04/02/sort-a-k-sorted-array.html</link>
-        <guid isPermaLink="true">http://interviewperfect.github.io//2016/04/02/sort-a-k-sorted-array.html</guid>
+        <link>http://interviewperfect.github.io//sort-a-k-sorted-array/</link>
+        <guid isPermaLink="true">http://interviewperfect.github.io//sort-a-k-sorted-array/</guid>
         
+        
+        <category>medium</category>
+        
+        <category>arrays</category>
         
       </item>
     
@@ -137,9 +265,13 @@ def inefficient_solution(city):
 &lt;/div&gt;
 </description>
         <pubDate>Sat, 02 Apr 2016 20:51:21 -0700</pubDate>
-        <link>http://interviewperfect.github.io//2016/04/02/interview-problem-godzilla-vs-2d-city.html</link>
-        <guid isPermaLink="true">http://interviewperfect.github.io//2016/04/02/interview-problem-godzilla-vs-2d-city.html</guid>
+        <link>http://interviewperfect.github.io//interview-problem-godzilla-vs-2d-city/</link>
+        <guid isPermaLink="true">http://interviewperfect.github.io//interview-problem-godzilla-vs-2d-city/</guid>
         
+        
+        <category>medium</category>
+        
+        <category>arrays</category>
         
       </item>
     
@@ -188,9 +320,13 @@ def inefficient_solution(city):
 &lt;/div&gt;
 </description>
         <pubDate>Sat, 02 Apr 2016 00:58:26 -0700</pubDate>
-        <link>http://interviewperfect.github.io//2016/04/02/buying-stocks.html</link>
-        <guid isPermaLink="true">http://interviewperfect.github.io//2016/04/02/buying-stocks.html</guid>
+        <link>http://interviewperfect.github.io//buying-stocks/</link>
+        <guid isPermaLink="true">http://interviewperfect.github.io//buying-stocks/</guid>
         
+        
+        <category>medium</category>
+        
+        <category>arrays</category>
         
       </item>
     

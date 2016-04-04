@@ -462,3 +462,7 @@ pre {
 .spoiler-button {
   font-size: 20px;
   display: inline; }
+
+.image-center {
+  text-align: center;
+  margin: 20px 0; }
