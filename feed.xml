@@ -6,9 +6,83 @@
 </description>
     <link>http://interviewperfect.github.io//</link>
     <atom:link href="http://interviewperfect.github.io//feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 03 Apr 2016 17:56:53 -0700</pubDate>
-    <lastBuildDate>Sun, 03 Apr 2016 17:56:53 -0700</lastBuildDate>
+    <pubDate>Wed, 06 Apr 2016 23:52:18 -0700</pubDate>
+    <lastBuildDate>Wed, 06 Apr 2016 23:52:18 -0700</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
+    
+      <item>
+        <title>[Interview Problem] Trailing Zeroes</title>
+        <description>&lt;p&gt;Sweet and easy to understand problem. Probably hard to solve?&lt;/p&gt;
+
+&lt;h2 id=&quot;problem&quot;&gt;Problem&lt;/h2&gt;
+
+&lt;p&gt;The problem is, given an integer, we want to determine how many trailing zeroes its factorial has. You get an integer’s factorial by multiplying all integers less than and equal to your integer, except for negative integers and zero. So for a number 5, it’s factorial can be found by doing $1 \cdot 2 \cdot 3 \cdot 4 \cdot 5 = 120$. The notation for a factorial, for a given number $n$, is $n!$. As before, $5! = 120$.&lt;/p&gt;
+
+&lt;h2 id=&quot;solution&quot;&gt;Solution&lt;/h2&gt;
+
+&lt;p&gt;This problem involves a bit more math than traditional interview problems. The strategy to use for solving this problem is to consider numbers with trailing zeroes and understand how these trailing zeroes occur in the context of multiplication and factors.&lt;/p&gt;
+
+&lt;p&gt;The key property to realize is that whenever you multiply a number by 10, you result in a number with one more trailing zero. In other words, every number with trailing zeroes is divisible by 10, and to take this further, the number of trailing zeroes equal the number of 10 factors the number has.&lt;/p&gt;
+
+&lt;p&gt;Let’s pivot back to the original problem. Before we move on, let’s refer to a number multipled in a factorial as a &lt;strong&gt;factorial term&lt;/strong&gt;. For example, in our prior example, the factorial terms for $5!$ are 1, 2, 3, 4, and 5. Given what we now know about trailing zeroes, is it true that the number of trailing zeroes for a factorial is the sum of the number of 10 factors each factorial term contributes to the multiplication? Immediately we see that that’s not true since $5! = 120$ but none of the factorial terms contain a factor of 10.&lt;/p&gt;
+
+&lt;p&gt;We need to keep exploring this 10 factor idea. How did $5!$ end up having a 10 factor? The next leap in understanding is to realize that 10 itself can be factorized to 2 and 5. Since both numbers are prime numbers, we cannot factorize them any further. At this point, we can see that it’s not really the total number of 10 factors each factorial term contributes, but the total number of 2 and 5 factorial pairs they contribute.&lt;/p&gt;
+
+&lt;p&gt;In fact, the problem can be simplified even further by realizing that since the number of 2 factors is always greater than or equal to the number of 5 factors in a factorial, we really only care about the total number of 5 factors.&lt;/p&gt;
+
+&lt;p&gt;To summarize, in order to obtain our solution, we needed to reach these conclusions:&lt;br /&gt;
+1) the number of trailing zeroes of a number equals the number of 10 factors it has
+2) 10 can be factorized to prime numbers 2 and 5, so we are really interested in the number of 2 and 5 pairs
+3) Since the number of 2 factors is always greater than or equal to the number of 5 factors in a factorial, we only need to worry about the number of 5 factors&lt;/p&gt;
+
+&lt;h2 id=&quot;code-solution-python&quot;&gt;Code solution (Python)&lt;/h2&gt;
+
+&lt;h3 id=&quot;brute-force&quot;&gt;Brute force&lt;/h3&gt;
+
+&lt;p&gt;For each factorial term, determine how many 5 factors it has.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def factorial_trailing_zeros(n):
+    trailing_zeroes = 0
+    for i in xrange(1, n + 1):
+        while(i % 5 == 0):
+            trailing_zeroes += 1
+            i /= 5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;smarter&quot;&gt;Smarter&lt;/h3&gt;
+
+&lt;p&gt;This solution is a lot more efficient but more complicated to understand as well. First, we need to realize that multiples of 5 contribute at least one 5 factor, multiples of $5^2 = 25$ contribute at least two 5 factors, multiples of $5^3 = 125$ contribute at least three 5 factors and so on.&lt;/p&gt;
+
+&lt;p&gt;The idea is to count all factorial terms that have a 5 factor, and add the count to the trailing zeroes. Then count all factorial terms that have a 25 factor, and add the count to the trailing zeroes. We do not add double the count for 25 even though multiples of 25 contribute at least two 5 factors since counting all factorial terms that have a 5 factor already accounts for this. We keep doing this for larger powers of 5, stopping at the largest power of 5 less than or equal to n.&lt;/p&gt;
+
+&lt;p&gt;In other words, we want to count the multiples of 5 less than or equal to n, the multiples of 25 less than or equal to n, up till the largest power of 5 less than or equal to n.&lt;/p&gt;
+
+&lt;p&gt;How do we do so? We notice that a multiple of 5 is made of 5s, obviously. As such, we can just divide n by 5 and floor the result which will give us all the multiples of 5 less than or equal to n. For example, 25 is made of five 5s, or 5 + 5 + 5 + 5 + 5. 5 is less than 25, 5 + 5 is less than 25, 5 + 5 + 5 is less than 25, 5 + 5 + 5 + 5 is less than 25. 5 + 5 + 5 + 5 + 5 = 25. Nice, we’ve covered all the multiples of 5 less than or equal to 25. We can extrapolate this logic to higher powers of 5.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def factorial_trailing_zeros(n):
+    if n &amp;lt; 5:
+        return 0
+    largest_pow_of_five_less_than_n = int(math.log(n, 5))
+    trailing_zeroes = 0
+    for i in xrange(1, largest_pow_of_five_less_than_n + 1):
+        divisor = int(math.pow(5, i))
+        trailing_zeroes += n / divisor
+
+    return trailing_zeroes
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Wed, 06 Apr 2016 21:20:00 -0700</pubDate>
+        <link>http://interviewperfect.github.io//interview-problem-trailing-zeroes/</link>
+        <guid isPermaLink="true">http://interviewperfect.github.io//interview-problem-trailing-zeroes/</guid>
+        
+        
+        <category>medium</category>
+        
+        <category>math</category>
+        
+      </item>
     
       <item>
         <title>[Interview Problem] Maximum Keener</title>

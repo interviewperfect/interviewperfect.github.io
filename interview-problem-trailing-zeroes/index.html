@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>[Interview Problem] Trailing Zeroes</title>
+  <meta name="description" content="Sweet and easy to understand problem. Probably hard to solve?">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://interviewperfect.github.io//interview-problem-trailing-zeroes/">
+  <link rel="alternate" type="application/rss+xml" title="InterviewPerfect" href="http://interviewperfect.github.io//feed.xml">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+  <!-- mathjax config similar to math.stackexchange -->
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$', '$'] ],
+      displayMath: [ ['$$', '$$']],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    messageStyle: "none",
+    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+  });
+
+  button = document.createElement("button");
+  button.className = "spoiler-button";
+  button.innerHTML = "spoiler";
+  button.onclick = function() {
+    $(".spoiler").show();
+    $(button).hide();
+  }
+  $(".spoiler").after(button)
+  </script>
+
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">InterviewPerfect</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+            
+              <a class="page-link" href="/about/">About</a>
+            
+          
+        
+          
+            
+          
+        
+          
+            
+              <a class="page-link" href="/categories/">Categories</a>
+            
+          
+        
+          
+            
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">[Interview Problem] Trailing Zeroes</h1>
+    <p class="post-meta">
+        
+            <a class="category" href="/categories/medium">medium</a>
+        
+            <a class="category" href="/categories/math">math</a>
+        
+    </p>
+    <p class="post-meta">
+        <time datetime="2016-04-06T21:20:00-07:00" itemprop="datePublished">Apr 6, 2016</time>
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>Sweet and easy to understand problem. Probably hard to solve?</p>
+
+<h2 id="problem">Problem</h2>
+
+<p>The problem is, given an integer, we want to determine how many trailing zeroes its factorial has. You get an integer’s factorial by multiplying all integers less than and equal to your integer, except for negative integers and zero. So for a number 5, it’s factorial can be found by doing $1 \cdot 2 \cdot 3 \cdot 4 \cdot 5 = 120$. The notation for a factorial, for a given number $n$, is $n!$. As before, $5! = 120$.</p>
+
+<h2 id="solution">Solution</h2>
+
+<p>This problem involves a bit more math than traditional interview problems. The strategy to use for solving this problem is to consider numbers with trailing zeroes and understand how these trailing zeroes occur in the context of multiplication and factors.</p>
+
+<p>The key property to realize is that whenever you multiply a number by 10, you result in a number with one more trailing zero. In other words, every number with trailing zeroes is divisible by 10, and to take this further, the number of trailing zeroes equal the number of 10 factors the number has.</p>
+
+<p>Let’s pivot back to the original problem. Before we move on, let’s refer to a number multipled in a factorial as a <strong>factorial term</strong>. For example, in our prior example, the factorial terms for $5!$ are 1, 2, 3, 4, and 5. Given what we now know about trailing zeroes, is it true that the number of trailing zeroes for a factorial is the sum of the number of 10 factors each factorial term contributes to the multiplication? Immediately we see that that’s not true since $5! = 120$ but none of the factorial terms contain a factor of 10.</p>
+
+<p>We need to keep exploring this 10 factor idea. How did $5!$ end up having a 10 factor? The next leap in understanding is to realize that 10 itself can be factorized to 2 and 5. Since both numbers are prime numbers, we cannot factorize them any further. At this point, we can see that it’s not really the total number of 10 factors each factorial term contributes, but the total number of 2 and 5 factorial pairs they contribute.</p>
+
+<p>In fact, the problem can be simplified even further by realizing that since the number of 2 factors is always greater than or equal to the number of 5 factors in a factorial, we really only care about the total number of 5 factors.</p>
+
+<p>To summarize, in order to obtain our solution, we needed to reach these conclusions:<br />
+1) the number of trailing zeroes of a number equals the number of 10 factors it has
+2) 10 can be factorized to prime numbers 2 and 5, so we are really interested in the number of 2 and 5 pairs
+3) Since the number of 2 factors is always greater than or equal to the number of 5 factors in a factorial, we only need to worry about the number of 5 factors</p>
+
+<h2 id="code-solution-python">Code solution (Python)</h2>
+
+<h3 id="brute-force">Brute force</h3>
+
+<p>For each factorial term, determine how many 5 factors it has.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>def factorial_trailing_zeros(n):
+    trailing_zeroes = 0
+    for i in xrange(1, n + 1):
+        while(i % 5 == 0):
+            trailing_zeroes += 1
+            i /= 5
+</code></pre>
+</div>
+
+<h3 id="smarter">Smarter</h3>
+
+<p>This solution is a lot more efficient but more complicated to understand as well. First, we need to realize that multiples of 5 contribute at least one 5 factor, multiples of $5^2 = 25$ contribute at least two 5 factors, multiples of $5^3 = 125$ contribute at least three 5 factors and so on.</p>
+
+<p>The idea is to count all factorial terms that have a 5 factor, and add the count to the trailing zeroes. Then count all factorial terms that have a 25 factor, and add the count to the trailing zeroes. We do not add double the count for 25 even though multiples of 25 contribute at least two 5 factors since counting all factorial terms that have a 5 factor already accounts for this. We keep doing this for larger powers of 5, stopping at the largest power of 5 less than or equal to n.</p>
+
+<p>In other words, we want to count the multiples of 5 less than or equal to n, the multiples of 25 less than or equal to n, up till the largest power of 5 less than or equal to n.</p>
+
+<p>How do we do so? We notice that a multiple of 5 is made of 5s, obviously. As such, we can just divide n by 5 and floor the result which will give us all the multiples of 5 less than or equal to n. For example, 25 is made of five 5s, or 5 + 5 + 5 + 5 + 5. 5 is less than 25, 5 + 5 is less than 25, 5 + 5 + 5 is less than 25, 5 + 5 + 5 + 5 is less than 25. 5 + 5 + 5 + 5 + 5 = 25. Nice, we’ve covered all the multiples of 5 less than or equal to 25. We can extrapolate this logic to higher powers of 5.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>def factorial_trailing_zeros(n):
+    if n &lt; 5:
+        return 0
+    largest_pow_of_five_less_than_n = int(math.log(n, 5))
+    trailing_zeroes = 0
+    for i in xrange(1, largest_pow_of_five_less_than_n + 1):
+        divisor = int(math.pow(5, i))
+        trailing_zeroes += n / divisor
+
+    return trailing_zeroes
+</code></pre>
+</div>
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">InterviewPerfect</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>Need to get a solution clarified? Want to correct an inaccuracy? General inquiries?</br></br> Please email me and I will try to reply as fast as possible: </li>
+          <li><a href="mailto:interviewperfectblog@gmail.com">interviewperfectblog@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Learn how to pass technical interviews from companies such as Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining the step-by-step logic behind each solution. Good luck in job searching!
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
