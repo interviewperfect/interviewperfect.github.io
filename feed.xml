@@ -6,8 +6,8 @@
 </description>
     <link>http://interviewperfect.github.io//</link>
     <atom:link href="http://interviewperfect.github.io//feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 07 Apr 2016 00:01:08 -0700</pubDate>
-    <lastBuildDate>Thu, 07 Apr 2016 00:01:08 -0700</lastBuildDate>
+    <pubDate>Thu, 07 Apr 2016 00:24:59 -0700</pubDate>
+    <lastBuildDate>Thu, 07 Apr 2016 00:24:59 -0700</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
     
       <item>
@@ -17,6 +17,8 @@
 &lt;h2 id=&quot;problem&quot;&gt;Problem&lt;/h2&gt;
 
 &lt;p&gt;The problem is, given an integer, we want to determine how many trailing zeroes its factorial has. You get an integer’s factorial by multiplying all integers less than and equal to your integer, except for negative integers and zero. So for a number 5, it’s factorial can be found by doing $1 \cdot 2 \cdot 3 \cdot 4 \cdot 5 = 120$. The notation for a factorial, for a given number $n$, is $n!$. As before, $5! = 120$.&lt;/p&gt;
+
+&lt;p&gt;On first thought, you might be considering just doing the multiplication and counting how many times you can divide the result by 10. However, factorials grow at a crazy rate and you might be asked to count the trailing zeroes for something like 100. $100!$ has 158 digits. Doing several multiplications involving 100+ digit numbers is not efficient at all. We can definitely do better.&lt;/p&gt;
 
 &lt;h2 id=&quot;solution&quot;&gt;Solution&lt;/h2&gt;
 
