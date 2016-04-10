@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>[Facebook Interview Problem] Word Search</title>
+    <meta name="description" content="This was a question I’ve gotten for a Facebook interview. I have a few friends who also have had the same question asked. Enjoy :)">
+
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="canonical" href="http://interviewperfect.github.io//facebook-interview-problem-word-search/">
+    <link rel="alternate" type="application/rss+xml" title="InterviewPerfect" href="http://interviewperfect.github.io//feed.xml">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+    <!-- mathjax config similar to math.stackexchange -->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            jax: ["input/TeX", "output/HTML-CSS"],
+            tex2jax: {
+                inlineMath: [ ['$', '$'] ],
+                displayMath: [ ['$$', '$$']],
+                processEscapes: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            },
+            messageStyle: "none",
+            "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+        });
+
+        button = document.createElement("button");
+        button.className = "spoiler-button";
+        button.innerHTML = "spoiler";
+        button.onclick = function() {
+            $(".spoiler").show();
+            $(button).hide();
+        }
+        $(".spoiler").after(button)
+    </script>
+
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-76122167-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+    
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">InterviewPerfect</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        <a class="page-link" href="categories">Categories</a>
+        
+          
+            
+              <a class="page-link" href="/about/">About</a>
+            
+          
+        
+          
+            
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">[Facebook Interview Problem] Word Search</h1>
+    <p class="post-meta">
+        
+            <a class="category" href="/categories/hard">hard</a>
+        
+            <a class="category" href="/categories/graphs">graphs</a>
+        
+            <a class="category" href="/categories/facebook">facebook</a>
+        
+    </p>
+    <p class="post-meta">
+        <time datetime="2016-04-06T23:19:20-07:00" itemprop="datePublished">Apr 6, 2016</time>
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>This was a question I’ve gotten for a Facebook interview. I have a few friends who also have had the same question asked. Enjoy :)</p>
+
+<h2 id="problem">Problem</h2>
+
+<p>Given an n by m grid of letters and a string, we want to see if there is a chain of letters in the grid that matches the string. The rules for the chain is that each consecutive character can only be directly adjacent to each other (not diagonal) and we cannot reuse a letter.</p>
+
+<p>For a example, consider a grid like so (we want to match the string “KAPPA”):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>a | b | k | p | c
+-----------------
+t | d | a | p | a
+-----------------
+p | a | k | t | c
+-----------------
+p | a | t | z | a
+</code></pre>
+</div>
+
+<p>“KAPPA” can be matched like so and our function would return true:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>a | b | k | p | c
+-----------------
+t | d | a | p | a
+-----------------
+P | A | K | t | c
+-----------------
+P | A | t | z | a
+</code></pre>
+</div>
+
+<h2 id="ideas-and-solution">Ideas and solution</h2>
+
+<p>We would typically start a problem by considering all possible solutions. However, this problem setup gives a big hint on what type of solution we should use. <strong>Typically, grid problems that involve some sort of searching hints at a graph algorithm-based solution</strong>. We start out by considering the simplest which are depth-first search (DFS) and breadth-first search (BFS). Both aim to solve the same problem but each is more efficient to use or easy to program in certain situations.</p>
+
+<h3 id="dfs-or-bfs">DFS or BFS?</h3>
+
+<p>This question really comes down to whether our problem is more or less suited for recursion. If more, we should try DFS first, if less, BFS. Problems that are more suitable for recursion are problems that can be broken down into multiple, smaller pieces. This is actually the case for our problem. Consider when we are searching for the word “KAPPA” and we have already found “KA”. Now we only need to find “PPA” and we see that the problem has naturally broken itself down to a smaller, but essentially the same problem. Instead of needing to find the string “KAPPA”, we now need to find the string “PPA”. Thus we decide to try out DFS first.</p>
+
+<h3 id="rest-of-the-solution">Rest of the solution</h3>
+
+<p>A good start to coding the problem is to think about the overall structure of our solution. A function we would definitely need is a search function that would take in a grid square, search the grid for the word using a modified DFS, and return <code class="highlighter-rouge">true</code> or <code class="highlighter-rouge">false</code>. Let’s call this function <code class="highlighter-rouge">search</code>. Since any grid square could be the start of a valid sequence in the grid, we would need to call <code class="highlighter-rouge">search</code> on each grid square.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>grid = [ ... ]
+search_string = "kappa"
+for row_i in xrange(len(grid)):
+    for col_i in xrange(len(grid[row_i])):
+        if search(grid, row_i, col_i, search_string)
+            return True
+return False
+</code></pre>
+</div>
+
+<p>The search function would search the adjacent squares of the input square for the first character in the string. If we found a square with the first character in the string, it’s a candidate and we need to test it by calling <code class="highlighter-rouge">search</code> on it recursively. Since we already found the first character, we are now effectively searching for a new string which is the old string without the first character.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>def search(grid, row_i, col_i, search_string):
+    # make sure grid is valid
+    if row_i &lt; 0 or row_i &gt;= len(grid):
+        return False
+    elif col_i &lt; 0 or col_i &gt;= len(grid[row_i]):
+        return False
+
+    # found all characters!
+    if len(search_string) == 0:
+        return True
+
+    # grid doesn't contain character we are looking for
+    if grid[row_i][col_i] != search_string[0]:
+        return False
+
+    # grid does contain character, let's look for the rest of the string
+    return search(grid, row_i + 1, col_i, search_string[1:]) or \
+        search(grid, row_i - 1, col_i, search_string[1:]) or \
+        search(grid, row_i, col_i + 1, search_string[1:]) or \
+        search(grid, row_i, col_i - 1, search_string[1:])
+</code></pre>
+</div>
+
+<h3 id="were-not-done-">We’re not done :(</h3>
+
+<p>The solution looks good so far but we’re certainly not done. We have not addressed the other constraint that we cannot reuse squares. This constraint means that whenever we check for a candidate grid to search next, we have to make sure we haven’t used it already. To do so, we need to first know what exactly we have used already. We can keep track of this using an array that we will call the <code class="highlighter-rouge">used_list</code>.</p>
+
+<p>The idea will be that the <code class="highlighter-rouge">used_list</code> will grow and shrink with the recursion. Everytime we move down a candidate grid square, we grow the <code class="highlighter-rouge">used_list</code> by adding the candidate to the list and everytime a candidate grid square ends up as a dead end, we shrink the <code class="highlighter-rouge">used_list</code> and move back up the recursion. This will ensure that the <code class="highlighter-rouge">used_list</code> will always contain exactly the grid squares we have used in the search so far. Voila, we have the full solution!</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>def search(grid, row_i, col_i, search_string, used_list):
+    # make sure grid is valid
+    if row_i &lt; 0 or row_i &gt;= len(grid):
+        return False
+    elif col_i &lt; 0 or col_i &gt;= len(grid[row_i]):
+        return False
+
+    # found all characters!
+    if len(search_string) == 0:
+        return True
+
+    # make sure we're not on a grid square we've already used for this particular search instance
+    for seen_row_i, seen_col_i in used_list:
+        if seen_row_i == row_i and seen_col_i == col_i:
+            return False
+
+    # grid doesn't contain character we are looking for
+    if grid[row_i][col_i] != search_string[0]:
+        return False
+
+    used_list.append((row_i, col_i))
+
+    # grid does contain character, let's look for the rest of the string
+    found = search(grid, row_i + 1, col_i, search_string[1:], used_list) or \
+        search(grid, row_i - 1, col_i, search_string[1:], used_list) or \
+        search(grid, row_i, col_i + 1, search_string[1:], used_list) or \
+        search(grid, row_i, col_i - 1, search_string[1:], used_list)
+
+    if found:
+        return True
+    else:
+        # not using this grid anymore...
+        used_list.pop()
+        return False
+</code></pre>
+</div>
+
+<h2 id="coded-solution-python">Coded solution (Python)</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>grid = [
+    [ "a", "b", "k", "p", "c" ],
+    [ "t", "d", "a", "p", "a" ],
+    [ "p", "a", "k", "t", "c" ],
+    [ "p", "a", "t", "z", "a" ]
+]
+search_string = "kappa"
+
+def search(grid, row_i, col_i, search_string, used_list):
+    # make sure grid is valid
+    if row_i &lt; 0 or row_i &gt;= len(grid):
+        return False
+    elif col_i &lt; 0 or col_i &gt;= len(grid[row_i]):
+        return False
+
+    # found all characters!
+    if len(search_string) == 0:
+        return True
+
+    # make sure we're not on a grid square we've already used for this particular search instance
+    for seen_row_i, seen_col_i in used_list:
+        if seen_row_i == row_i and seen_col_i == col_i:
+            return False
+
+    # grid doesn't contain character we are looking for
+    if grid[row_i][col_i] != search_string[0]:
+        return False
+
+    used_list.append((row_i, col_i))
+
+    # grid does contain character, let's look for the rest of the string
+    found = search(grid, row_i + 1, col_i, search_string[1:], used_list) or \
+        search(grid, row_i - 1, col_i, search_string[1:], used_list) or \
+        search(grid, row_i, col_i + 1, search_string[1:], used_list) or \
+        search(grid, row_i, col_i - 1, search_string[1:], used_list)
+
+    if found:
+        return True
+    else:
+        # not using this grid anymore...
+        used_list.pop()
+        return False
+
+def word_search(grid, search_string):
+    used_list = []
+    for row_i in xrange(len(grid)):
+        for col_i in xrange(len(grid[row_i])):
+            if search(grid, row_i, col_i, search_string, used_list):
+                return True
+    return False
+</code></pre>
+</div>
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">InterviewPerfect</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>Need to get a solution clarified? Want to correct an inaccuracy? General inquiries?</br></br> Please email me and I will try to reply as fast as possible: </li>
+          <li><a href="mailto:interviewperfectblog@gmail.com">interviewperfectblog@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Learn how to pass technical interviews from companies such as Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining the step-by-step logic behind each solution. Good luck in job searching!
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

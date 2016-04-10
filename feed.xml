@@ -6,9 +6,199 @@
 </description>
     <link>http://interviewperfect.github.io//</link>
     <atom:link href="http://interviewperfect.github.io//feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 07 Apr 2016 00:24:59 -0700</pubDate>
-    <lastBuildDate>Thu, 07 Apr 2016 00:24:59 -0700</lastBuildDate>
+    <pubDate>Sun, 10 Apr 2016 01:51:16 -0700</pubDate>
+    <lastBuildDate>Sun, 10 Apr 2016 01:51:16 -0700</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
+    
+      <item>
+        <title>[Facebook Interview Problem] Word Search</title>
+        <description>&lt;p&gt;This was a question I’ve gotten for a Facebook interview. I have a few friends who also have had the same question asked. Enjoy :)&lt;/p&gt;
+
+&lt;h2 id=&quot;problem&quot;&gt;Problem&lt;/h2&gt;
+
+&lt;p&gt;Given an n by m grid of letters and a string, we want to see if there is a chain of letters in the grid that matches the string. The rules for the chain is that each consecutive character can only be directly adjacent to each other (not diagonal) and we cannot reuse a letter.&lt;/p&gt;
+
+&lt;p&gt;For a example, consider a grid like so (we want to match the string “KAPPA”):&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;a | b | k | p | c
+-----------------
+t | d | a | p | a
+-----------------
+p | a | k | t | c
+-----------------
+p | a | t | z | a
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;“KAPPA” can be matched like so and our function would return true:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;a | b | k | p | c
+-----------------
+t | d | a | p | a
+-----------------
+P | A | K | t | c
+-----------------
+P | A | t | z | a
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;ideas-and-solution&quot;&gt;Ideas and solution&lt;/h2&gt;
+
+&lt;p&gt;We would typically start a problem by considering all possible solutions. However, this problem setup gives a big hint on what type of solution we should use. &lt;strong&gt;Typically, grid problems that involve some sort of searching hints at a graph algorithm-based solution&lt;/strong&gt;. We start out by considering the simplest which are depth-first search (DFS) and breadth-first search (BFS). Both aim to solve the same problem but each is more efficient to use or easy to program in certain situations.&lt;/p&gt;
+
+&lt;h3 id=&quot;dfs-or-bfs&quot;&gt;DFS or BFS?&lt;/h3&gt;
+
+&lt;p&gt;This question really comes down to whether our problem is more or less suited for recursion. If more, we should try DFS first, if less, BFS. Problems that are more suitable for recursion are problems that can be broken down into multiple, smaller pieces. This is actually the case for our problem. Consider when we are searching for the word “KAPPA” and we have already found “KA”. Now we only need to find “PPA” and we see that the problem has naturally broken itself down to a smaller, but essentially the same problem. Instead of needing to find the string “KAPPA”, we now need to find the string “PPA”. Thus we decide to try out DFS first.&lt;/p&gt;
+
+&lt;h3 id=&quot;rest-of-the-solution&quot;&gt;Rest of the solution&lt;/h3&gt;
+
+&lt;p&gt;A good start to coding the problem is to think about the overall structure of our solution. A function we would definitely need is a search function that would take in a grid square, search the grid for the word using a modified DFS, and return &lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;. Let’s call this function &lt;code class=&quot;highlighter-rouge&quot;&gt;search&lt;/code&gt;. Since any grid square could be the start of a valid sequence in the grid, we would need to call &lt;code class=&quot;highlighter-rouge&quot;&gt;search&lt;/code&gt; on each grid square.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grid = [ ... ]
+search_string = &quot;kappa&quot;
+for row_i in xrange(len(grid)):
+    for col_i in xrange(len(grid[row_i])):
+        if search(grid, row_i, col_i, search_string)
+            return True
+return False
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The search function would search the adjacent squares of the input square for the first character in the string. If we found a square with the first character in the string, it’s a candidate and we need to test it by calling &lt;code class=&quot;highlighter-rouge&quot;&gt;search&lt;/code&gt; on it recursively. Since we already found the first character, we are now effectively searching for a new string which is the old string without the first character.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def search(grid, row_i, col_i, search_string):
+    # make sure grid is valid
+    if row_i &amp;lt; 0 or row_i &amp;gt;= len(grid):
+        return False
+    elif col_i &amp;lt; 0 or col_i &amp;gt;= len(grid[row_i]):
+        return False
+
+    # found all characters!
+    if len(search_string) == 0:
+        return True
+
+    # grid doesn&#39;t contain character we are looking for
+    if grid[row_i][col_i] != search_string[0]:
+        return False
+
+    # grid does contain character, let&#39;s look for the rest of the string
+    return search(grid, row_i + 1, col_i, search_string[1:]) or \
+        search(grid, row_i - 1, col_i, search_string[1:]) or \
+        search(grid, row_i, col_i + 1, search_string[1:]) or \
+        search(grid, row_i, col_i - 1, search_string[1:])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;were-not-done-&quot;&gt;We’re not done :(&lt;/h3&gt;
+
+&lt;p&gt;The solution looks good so far but we’re certainly not done. We have not addressed the other constraint that we cannot reuse squares. This constraint means that whenever we check for a candidate grid to search next, we have to make sure we haven’t used it already. To do so, we need to first know what exactly we have used already. We can keep track of this using an array that we will call the &lt;code class=&quot;highlighter-rouge&quot;&gt;used_list&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The idea will be that the &lt;code class=&quot;highlighter-rouge&quot;&gt;used_list&lt;/code&gt; will grow and shrink with the recursion. Everytime we move down a candidate grid square, we grow the &lt;code class=&quot;highlighter-rouge&quot;&gt;used_list&lt;/code&gt; by adding the candidate to the list and everytime a candidate grid square ends up as a dead end, we shrink the &lt;code class=&quot;highlighter-rouge&quot;&gt;used_list&lt;/code&gt; and move back up the recursion. This will ensure that the &lt;code class=&quot;highlighter-rouge&quot;&gt;used_list&lt;/code&gt; will always contain exactly the grid squares we have used in the search so far. Voila, we have the full solution!&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def search(grid, row_i, col_i, search_string, used_list):
+    # make sure grid is valid
+    if row_i &amp;lt; 0 or row_i &amp;gt;= len(grid):
+        return False
+    elif col_i &amp;lt; 0 or col_i &amp;gt;= len(grid[row_i]):
+        return False
+
+    # found all characters!
+    if len(search_string) == 0:
+        return True
+
+    # make sure we&#39;re not on a grid square we&#39;ve already used for this particular search instance
+    for seen_row_i, seen_col_i in used_list:
+        if seen_row_i == row_i and seen_col_i == col_i:
+            return False
+
+    # grid doesn&#39;t contain character we are looking for
+    if grid[row_i][col_i] != search_string[0]:
+        return False
+
+    used_list.append((row_i, col_i))
+
+    # grid does contain character, let&#39;s look for the rest of the string
+    found = search(grid, row_i + 1, col_i, search_string[1:], used_list) or \
+        search(grid, row_i - 1, col_i, search_string[1:], used_list) or \
+        search(grid, row_i, col_i + 1, search_string[1:], used_list) or \
+        search(grid, row_i, col_i - 1, search_string[1:], used_list)
+
+    if found:
+        return True
+    else:
+        # not using this grid anymore...
+        used_list.pop()
+        return False
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;coded-solution-python&quot;&gt;Coded solution (Python)&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grid = [
+    [ &quot;a&quot;, &quot;b&quot;, &quot;k&quot;, &quot;p&quot;, &quot;c&quot; ],
+    [ &quot;t&quot;, &quot;d&quot;, &quot;a&quot;, &quot;p&quot;, &quot;a&quot; ],
+    [ &quot;p&quot;, &quot;a&quot;, &quot;k&quot;, &quot;t&quot;, &quot;c&quot; ],
+    [ &quot;p&quot;, &quot;a&quot;, &quot;t&quot;, &quot;z&quot;, &quot;a&quot; ]
+]
+search_string = &quot;kappa&quot;
+
+def search(grid, row_i, col_i, search_string, used_list):
+    # make sure grid is valid
+    if row_i &amp;lt; 0 or row_i &amp;gt;= len(grid):
+        return False
+    elif col_i &amp;lt; 0 or col_i &amp;gt;= len(grid[row_i]):
+        return False
+
+    # found all characters!
+    if len(search_string) == 0:
+        return True
+
+    # make sure we&#39;re not on a grid square we&#39;ve already used for this particular search instance
+    for seen_row_i, seen_col_i in used_list:
+        if seen_row_i == row_i and seen_col_i == col_i:
+            return False
+
+    # grid doesn&#39;t contain character we are looking for
+    if grid[row_i][col_i] != search_string[0]:
+        return False
+
+    used_list.append((row_i, col_i))
+
+    # grid does contain character, let&#39;s look for the rest of the string
+    found = search(grid, row_i + 1, col_i, search_string[1:], used_list) or \
+        search(grid, row_i - 1, col_i, search_string[1:], used_list) or \
+        search(grid, row_i, col_i + 1, search_string[1:], used_list) or \
+        search(grid, row_i, col_i - 1, search_string[1:], used_list)
+
+    if found:
+        return True
+    else:
+        # not using this grid anymore...
+        used_list.pop()
+        return False
+
+def word_search(grid, search_string):
+    used_list = []
+    for row_i in xrange(len(grid)):
+        for col_i in xrange(len(grid[row_i])):
+            if search(grid, row_i, col_i, search_string, used_list):
+                return True
+    return False
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Wed, 06 Apr 2016 23:19:20 -0700</pubDate>
+        <link>http://interviewperfect.github.io//facebook-interview-problem-word-search/</link>
+        <guid isPermaLink="true">http://interviewperfect.github.io//facebook-interview-problem-word-search/</guid>
+        
+        
+        <category>hard</category>
+        
+        <category>graphs</category>
+        
+        <category>facebook</category>
+        
+      </item>
     
       <item>
         <title>[Interview Problem] Trailing Zeroes</title>

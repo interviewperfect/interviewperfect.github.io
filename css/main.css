@@ -467,7 +467,7 @@ pre {
   text-align: center;
   margin: 20px 0; }
 
-.category_index_parent {
+.category-index-parent {
   margin-top: -10px; }
 
 .category {
@@ -480,5 +480,17 @@ pre {
   margin-right: 2px;
   font-size: 14px; }
 
-.category_heading {
+.category-heading {
   margin: 20px 0; }
+
+.category-easy {
+  background-color: green; }
+
+.category-medium {
+  background-color: orange; }
+
+.category-medium {
+  background-color: orange; }
+
+.category-hard {
+  background-color: red; }
