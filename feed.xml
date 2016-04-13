@@ -6,9 +6,115 @@
 </description>
     <link>http://interviewperfect.github.io//</link>
     <atom:link href="http://interviewperfect.github.io//feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 10 Apr 2016 01:51:16 -0700</pubDate>
-    <lastBuildDate>Sun, 10 Apr 2016 01:51:16 -0700</lastBuildDate>
+    <pubDate>Wed, 13 Apr 2016 01:50:42 -0700</pubDate>
+    <lastBuildDate>Wed, 13 Apr 2016 01:50:42 -0700</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
+    
+      <item>
+        <title>[Google Interview Question] Captive Go Stones</title>
+        <description>&lt;h2 id=&quot;problem&quot;&gt;Problem&lt;/h2&gt;
+
+&lt;p&gt;Here’s a very, very simplified explanation for the game of Go. There are two players, one player plays with white stones, the other with black stones. The objective of the game is have surrounded a larger total area of the board with one’s stones than the opponent. Our questions deals with a simple aspect of the game, that of capturing and removing another player’s stones.&lt;/p&gt;
+
+&lt;p&gt;A stone is captured if it, or its group, is surrounded by opposing stones. Opposing stones surround the group of stones by occupying all orthogonally-adjacent points of the group.&lt;/p&gt;
+
+&lt;p&gt;Examples:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;------ ------ ------ -------
+| x  | |    | | x  | |xooox|
+|xox | |    | |xox | |xo ox|
+|xo x| | xx | |xox | |xooox|
+| xx | |xoox| | x  | | xxx |
+------ ------ ------ -------
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;In the first board, the o stones are not surrounded as there is still one spot the x stones need to fill. In the second board, the o stones are surrounded as their north, west, and east edges are occupied by x stones and their south edge is the end of the board. In the third board, the o stones are surrounded. In the last board, even though all the external edges are occupied by x stones, the o stones are not surrounded as there is a center spot that is empty and must be either filled by an o stone or an x stone for the rest of the o stones to be considered surrounded.&lt;/p&gt;
+
+&lt;p&gt;We want to write a program that, passed with a coordinate of a white stone and a Go board, we need to determine if the white stone is considered surrounded or not.&lt;/p&gt;
+
+&lt;h2 id=&quot;ideas-and-solution&quot;&gt;Ideas and solution&lt;/h2&gt;
+
+&lt;p&gt;We know that a group of stones is surrounded if the group has all edges occupied either by opposing stones or the edge of the board. This means that if there’s a stone in the group that has an edge that is empty, the group of stones is not surrounded. As such, the problem comes down to searching if one such stone in the group exists.&lt;/p&gt;
+
+&lt;p&gt;The fact that this problem involves a grid hints at a graph-related solution. We also know that this problem involves some kind of searching. Let’s try the most basic search algorithm, depth first search (DFS).&lt;/p&gt;
+
+&lt;p&gt;We would start the DFS from the coordinates of the white stone passed to us. The “children” of the stone (AKA grid positions we will search next) will be its north, south, east, and west neighbouring grid positions. At each new grid position we encounter, we check whether the grid is empty or not. If it’s empty, we know that the whole group of white stones we just processed is not surrounded, and thus the original stone we started searching from is not surrounded. If we encounter a black stone, there’s no point in searching further at this point as we encountered an “edge” of the group. The same applies if we encounter an edge of the board. Finally, one last thing we need to make sure is to keep track of all the grid positions we’ve seen so we do not re-search already searched stones.&lt;/p&gt;
+
+&lt;p&gt;As such, we see that DFS solves our problem nice and easily.&lt;/p&gt;
+
+&lt;h2 id=&quot;coded-solution-python&quot;&gt;Coded solution (Python)&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# white stones are denoted by 2, black stones by 1, empty grid positions by 0
+
+def is_captive(x, y, board):
+    # check that board exists
+    if len(board) == 0 or len(board[0]) == 0:
+        return False
+    # check that coordinates passed in is within bounds of board
+    if x &amp;lt; 0 or x &amp;gt;= len(board) or y &amp;lt; 0 or y &amp;gt;= len(board[0]):
+        return False
+    # check that grid passed in is a white stone
+    if board[x][y] != 2:
+        raise Exception()
+
+    # keep track of already searched grip positions
+    seen_set = set()
+    seen_set.add((x,y))
+
+    # if any of the white stones right beside us is not a captive, we are not a captive
+    return __is_captive(x+1, y, board, seen_set) and \
+            __is_captive(x-1, y, board, seen_set) and \
+            __is_captive(x, y+1, board, seen_set) and \
+            __is_captive(x, y-1, board, seen_set)
+
+def __is_captive(x, y, board, seen_set):
+    # check if already seen
+    if (x,y) in seen_set:
+        return True
+
+    seen_set.add((x,y))
+
+    # check if board edge
+    if x &amp;lt; 0 or x &amp;gt;= len(board) or y &amp;lt; 0 or y &amp;gt;= len(board[0]):
+        return True
+
+    # check if empty block
+    if board[x][y] == 0:
+        return False
+
+    # check if black piece
+    if board[x][y] == 1:
+        return True
+
+    # must be white piece, search all neighbours
+    return __is_captive(x+1, y, board, seen_set) and \
+            __is_captive(x-1, y, board, seen_set) and \
+            __is_captive(x, y+1, board, seen_set) and \
+            __is_captive(x, y-1, board, seen_set)
+
+print is_captive(2, 1, [
+    [ 0, 1, 0, 0, 0],
+    [ 1, 2, 1, 0, 0],
+    [ 1, 2, 2, 1, 0],
+    [ 1, 2, 1, 0, 0],
+    [ 0, 1, 0, 0, 0]
+])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Sun, 10 Apr 2016 03:40:20 -0700</pubDate>
+        <link>http://interviewperfect.github.io//google-interview-question-captive-go-stones/</link>
+        <guid isPermaLink="true">http://interviewperfect.github.io//google-interview-question-captive-go-stones/</guid>
+        
+        
+        <category>easy</category>
+        
+        <category>graph</category>
+        
+        <category>google</category>
+        
+      </item>
     
       <item>
         <title>[Facebook Interview Problem] Word Search</title>

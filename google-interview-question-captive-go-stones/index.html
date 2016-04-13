@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>[Google Interview Question] Captive Go Stones</title>
+    <meta name="description" content="An easy difficulty Google technical interview problem on determining whether a Go stone is captured. Step-by-step explanation provided with the solution.">
+
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="canonical" href="http://interviewperfect.github.io//google-interview-question-captive-go-stones/">
+    <link rel="alternate" type="application/rss+xml" title="InterviewPerfect" href="http://interviewperfect.github.io//feed.xml">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+    <!-- mathjax config similar to math.stackexchange -->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            jax: ["input/TeX", "output/HTML-CSS"],
+            tex2jax: {
+                inlineMath: [ ['$', '$'] ],
+                displayMath: [ ['$$', '$$']],
+                processEscapes: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            },
+            messageStyle: "none",
+            "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+        });
+
+        button = document.createElement("button");
+        button.className = "spoiler-button";
+        button.innerHTML = "spoiler";
+        button.onclick = function() {
+            $(".spoiler").show();
+            $(button).hide();
+        }
+        $(".spoiler").after(button)
+    </script>
+
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-76122167-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+    
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">InterviewPerfect</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        <a class="page-link" href="categories">Categories</a>
+        
+          
+            
+              <a class="page-link" href="/about/">About</a>
+            
+          
+        
+          
+            
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">[Google Interview Question] Captive Go Stones</h1>
+    <p class="post-meta">
+        
+            <a class="category" href="/categories/easy">easy</a>
+        
+            <a class="category" href="/categories/graph">graph</a>
+        
+            <a class="category" href="/categories/google">google</a>
+        
+    </p>
+    <p class="post-meta">
+        <time datetime="2016-04-10T03:40:20-07:00" itemprop="datePublished">Apr 10, 2016</time>
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <h2 id="problem">Problem</h2>
+
+<p>Here’s a very, very simplified explanation for the game of Go. There are two players, one player plays with white stones, the other with black stones. The objective of the game is have surrounded a larger total area of the board with one’s stones than the opponent. Our questions deals with a simple aspect of the game, that of capturing and removing another player’s stones.</p>
+
+<p>A stone is captured if it, or its group, is surrounded by opposing stones. Opposing stones surround the group of stones by occupying all orthogonally-adjacent points of the group.</p>
+
+<p>Examples:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>------ ------ ------ -------
+| x  | |    | | x  | |xooox|
+|xox | |    | |xox | |xo ox|
+|xo x| | xx | |xox | |xooox|
+| xx | |xoox| | x  | | xxx |
+------ ------ ------ -------
+</code></pre>
+</div>
+
+<p>In the first board, the o stones are not surrounded as there is still one spot the x stones need to fill. In the second board, the o stones are surrounded as their north, west, and east edges are occupied by x stones and their south edge is the end of the board. In the third board, the o stones are surrounded. In the last board, even though all the external edges are occupied by x stones, the o stones are not surrounded as there is a center spot that is empty and must be either filled by an o stone or an x stone for the rest of the o stones to be considered surrounded.</p>
+
+<p>We want to write a program that, passed with a coordinate of a white stone and a Go board, we need to determine if the white stone is considered surrounded or not.</p>
+
+<h2 id="ideas-and-solution">Ideas and solution</h2>
+
+<p>We know that a group of stones is surrounded if the group has all edges occupied either by opposing stones or the edge of the board. This means that if there’s a stone in the group that has an edge that is empty, the group of stones is not surrounded. As such, the problem comes down to searching if one such stone in the group exists.</p>
+
+<p>The fact that this problem involves a grid hints at a graph-related solution. We also know that this problem involves some kind of searching. Let’s try the most basic search algorithm, depth first search (DFS).</p>
+
+<p>We would start the DFS from the coordinates of the white stone passed to us. The “children” of the stone (AKA grid positions we will search next) will be its north, south, east, and west neighbouring grid positions. At each new grid position we encounter, we check whether the grid is empty or not. If it’s empty, we know that the whole group of white stones we just processed is not surrounded, and thus the original stone we started searching from is not surrounded. If we encounter a black stone, there’s no point in searching further at this point as we encountered an “edge” of the group. The same applies if we encounter an edge of the board. Finally, one last thing we need to make sure is to keep track of all the grid positions we’ve seen so we do not re-search already searched stones.</p>
+
+<p>As such, we see that DFS solves our problem nice and easily.</p>
+
+<h2 id="coded-solution-python">Coded solution (Python)</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># white stones are denoted by 2, black stones by 1, empty grid positions by 0
+
+def is_captive(x, y, board):
+    # check that board exists
+    if len(board) == 0 or len(board[0]) == 0:
+        return False
+    # check that coordinates passed in is within bounds of board
+    if x &lt; 0 or x &gt;= len(board) or y &lt; 0 or y &gt;= len(board[0]):
+        return False
+    # check that grid passed in is a white stone
+    if board[x][y] != 2:
+        raise Exception()
+
+    # keep track of already searched grip positions
+    seen_set = set()
+    seen_set.add((x,y))
+
+    # if any of the white stones right beside us is not a captive, we are not a captive
+    return __is_captive(x+1, y, board, seen_set) and \
+            __is_captive(x-1, y, board, seen_set) and \
+            __is_captive(x, y+1, board, seen_set) and \
+            __is_captive(x, y-1, board, seen_set)
+
+def __is_captive(x, y, board, seen_set):
+    # check if already seen
+    if (x,y) in seen_set:
+        return True
+
+    seen_set.add((x,y))
+
+    # check if board edge
+    if x &lt; 0 or x &gt;= len(board) or y &lt; 0 or y &gt;= len(board[0]):
+        return True
+
+    # check if empty block
+    if board[x][y] == 0:
+        return False
+
+    # check if black piece
+    if board[x][y] == 1:
+        return True
+
+    # must be white piece, search all neighbours
+    return __is_captive(x+1, y, board, seen_set) and \
+            __is_captive(x-1, y, board, seen_set) and \
+            __is_captive(x, y+1, board, seen_set) and \
+            __is_captive(x, y-1, board, seen_set)
+
+print is_captive(2, 1, [
+    [ 0, 1, 0, 0, 0],
+    [ 1, 2, 1, 0, 0],
+    [ 1, 2, 2, 1, 0],
+    [ 1, 2, 1, 0, 0],
+    [ 0, 1, 0, 0, 0]
+])
+</code></pre>
+</div>
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">InterviewPerfect</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>Need to get a solution clarified? Want to correct an inaccuracy? General inquiries?</br></br> Please email me and I will try to reply as fast as possible: </li>
+          <li><a href="mailto:interviewperfectblog@gmail.com">interviewperfectblog@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Learn how to pass technical interviews from companies such as Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining the step-by-step logic behind each solution. Good luck in job searching!
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
