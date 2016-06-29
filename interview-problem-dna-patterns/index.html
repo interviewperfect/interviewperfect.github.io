@@ -6,12 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Array Interview Problems</title>
-    <meta name="description" content="Learn how to pass technical interviews from companies such as Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining the step-by-step logic behind each solution. Good luck in job searching!
-">
+    <title>[Interview Problem] DNA Patterns</title>
+    <meta name="description" content="Problem">
 
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="http://interviewperfect.github.io//categories/arrays/">
+    <link rel="canonical" href="http://interviewperfect.github.io//interview-problem-dna-patterns/">
     <link rel="alternate" type="application/rss+xml" title="InterviewPerfect" href="http://interviewperfect.github.io//feed.xml">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
@@ -120,39 +119,59 @@
 
     <div class="page-content">
       <div class="wrapper">
-        <div class="archive-description">
-  <h1 class="archive-title">categories | <span style="font-size: 50px">arrays</span></h1>
-  
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">[Interview Problem] DNA Patterns</h1>
+    <p class="post-meta">
+        
+            <a class="category category-easy" href="/categories/easy">easy</a>
+        
+            <a class="category category-strings" href="/categories/strings">strings</a>
+        
+    </p>
+    <p class="post-meta">
+        <time datetime="2016-06-27T12:01:02-04:00" itemprop="datePublished">Jun 27, 2016</time>
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <h2 id="problem">Problem</h2>
+
+<p>There are four main building blocks of DNA. They are known as nucleotides and can be denoted by characters A (adenine), C (cytosine), G (guanine), and T (thymine). A strand of DNA is made of a sequence of nucleotides and thus can be represented as a string composed of A, C, G, and T. For example, <code class="highlighter-rouge">ACGACTGCTAGCTTGCCGGGTA</code>.</p>
+
+<p>The problem is, given a strand of DNA, how do you efficiently find all 10-letter long sequences that occur more than once? Sequences can overlap.</p>
+
+<h2 id="solution">Solution</h2>
+
+<p>The brute force solution is to iterate through every single 10-letter long sequence and then check if another such sequence can be found in the overall sequence. The complexity of this solution is $O(n^2)$.</p>
+
+<p>In the previous solution, you’ll probably notice that we would be iterating over a large portion of the DNA sequence repeatedly. The purpose is to check if our current 10-letter sequence appears again in the overall sequence. But we could invert this. As we iterate across the overall sequence, for each new 10-letter sequence we encounter, check if we have seen this sequence before. If we used a hash table to store all 10-letter sequences seen, then the check can be done in $O(1)$ and our new algorithm is $O(n)$.</p>
+
+<h2 id="coded-solution-pseudocode">Coded solution (Pseudocode)</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>hash_table = {}
+repeating = []
+for i in sequence.length - 10:
+  if sequence[i, i + 10] in hash_table:
+    Found a repeating sequence!
+  else:
+    hash_table.add(sequence[i, i + 10])
+</code></pre>
 </div>
 
-<div class="wrap">
+<h2 id="suffix-trees">Suffix trees</h2>
 
-  <div class="group-year">
-    
-      
-      
-        
-        <p>2016</p>
-      
-      <article>
-        <h3><a href="/sort-a-k-sorted-array/">[Interview Problem] Sort a K-sorted Array</a></h3>
-      </article>
-    
-      
-      
-      <article>
-        <h3><a href="/interview-problem-godzilla-vs-2d-city/">[Interview Problem] Godzilla vs 2D City</a></h3>
-      </article>
-    
-      
-      
-      <article>
-        <h3><a href="/buying-stocks/">[Interview Problem] Buying Stocks</a></h3>
-      </article>
-    
+<p>This problem can also be solved using a suffix tree. Suffix trees are very useful when working with large bodies of text. For one, it allows us to search for the number of occurences of a substring in a body of text, no matter how large, in $O(m)$ time where $m$ is the length of the string. A suffix tree can be constructed in $O(n)$ time where $n$ is the length of the body of text.</p>
+
+<p>So for our problem, given our overall sequence of DNA is length n, we construct the suffix tree in $O(n)$ time and then perform $10(n - 10) = O(n)$ queries of a substring of length 10. Each query takes a constant amount of time so the overall algorithm is $O(n)$.</p>
+
+<p>However, this is a complex solution and the hash table solution is just as fast, takes up an inconsequential amount of extra space, and most importantly, is much simpler. That being said, it’s good to be aware of suffix trees and how useful they are for string processing.</p>
+
   </div>
 
-</div>
+</article>
+
       </div>
     </div>
 

@@ -6,9 +6,297 @@
 </description>
     <link>http://interviewperfect.github.io//</link>
     <atom:link href="http://interviewperfect.github.io//feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 13 Apr 2016 01:50:42 -0700</pubDate>
-    <lastBuildDate>Wed, 13 Apr 2016 01:50:42 -0700</lastBuildDate>
+    <pubDate>Wed, 29 Jun 2016 03:08:19 -0400</pubDate>
+    <lastBuildDate>Wed, 29 Jun 2016 03:08:19 -0400</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
+    
+      <item>
+        <title>[Interview Problem] Water Jugs</title>
+        <description>&lt;h1 id=&quot;problem&quot;&gt;Problem&lt;/h1&gt;
+
+&lt;p&gt;You have two water jugs. One can hold &lt;code class=&quot;highlighter-rouge&quot;&gt;x&lt;/code&gt; liters and another &lt;code class=&quot;highlighter-rouge&quot;&gt;y&lt;/code&gt; liters. You want the total amount of water in the jugs to be &lt;code class=&quot;highlighter-rouge&quot;&gt;z&lt;/code&gt; liters at the end but it’s not always possible. Here are the possible moves you can do.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Fully empty a jug&lt;/li&gt;
+  &lt;li&gt;Fully fill a jug&lt;/li&gt;
+  &lt;li&gt;Pour water from a jug to another jug until the latter is full or the former is empty&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Write a function that takes in &lt;code class=&quot;highlighter-rouge&quot;&gt;x&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;y&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;z&lt;/code&gt; and returns &lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt; depending on if holding &lt;code class=&quot;highlighter-rouge&quot;&gt;z&lt;/code&gt; liters using the two jugs is possible.&lt;/p&gt;
+
+&lt;h1 id=&quot;arithmetic-solution&quot;&gt;Arithmetic Solution&lt;/h1&gt;
+
+&lt;p&gt;How I tackled the problem was by working with examples, trying to generate new &lt;code class=&quot;highlighter-rouge&quot;&gt;x&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;y&lt;/code&gt; combinations within an example, and then trying to figure out a pattern in generating these combinations. The challenge with this approach is that it may seem disconnected and random at first but with patience, you’ll be able to find an efficient way to iterate through all possible &lt;code class=&quot;highlighter-rouge&quot;&gt;x&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;y&lt;/code&gt; combinations.&lt;/p&gt;
+
+&lt;p&gt;The first thing I did to make the problem easier is to not think in terms of &lt;code class=&quot;highlighter-rouge&quot;&gt;x&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;y&lt;/code&gt; but small and large.&lt;/p&gt;
+
+&lt;p&gt;The next thing I realized is that there is very little freedom in working with the large jug. When filling the large jug, you really have 3 options available at the end. You can pour it all out which is pointless, completely filling the small jug and pouring the small jug out, or completely filling the small jug and filling the large jug. You are offered much more flexibility in initiating actions with the small jug and manipulating the contents of the large jug using the small jug.&lt;/p&gt;
+
+&lt;p&gt;Then, I made up an example and played around with it. Let’s try &lt;code class=&quot;highlighter-rouge&quot;&gt;x=5&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;y=7&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;z=2&lt;/code&gt;.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Step #&lt;/th&gt;
+      &lt;th&gt;x&lt;/th&gt;
+      &lt;th&gt;y&lt;/th&gt;
+      &lt;th&gt;sum&lt;/th&gt;
+      &lt;th&gt;action&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;start&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;fill small, small to large&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;7&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;fill small, small to large&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;pour large, small to large&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;7&lt;/td&gt;
+      &lt;td&gt;8&lt;/td&gt;
+      &lt;td&gt;fill small, small to large&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;6&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;pour large, small to large&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;7&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;6&lt;/td&gt;
+      &lt;td&gt;6&lt;/td&gt;
+      &lt;td&gt;fill small, small to large&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;8&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;7&lt;/td&gt;
+      &lt;td&gt;11&lt;/td&gt;
+      &lt;td&gt;fill small, small to large&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;9&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;pour large, small to large&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;7&lt;/td&gt;
+      &lt;td&gt;9&lt;/td&gt;
+      &lt;td&gt;fill small, small to large&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;11&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;pour large, small to large&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;The answer to the above problem is true, since we reached a sum of 2 which is what &lt;code class=&quot;highlighter-rouge&quot;&gt;z&lt;/code&gt; is.&lt;/p&gt;
+
+&lt;p&gt;The main takeaway from the above example is the generation of new values of &lt;code class=&quot;highlighter-rouge&quot;&gt;x&lt;/code&gt; after each round. In fact, if you kept going you will realize the pattern repeats.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Step #&lt;/th&gt;
+      &lt;th&gt;x&lt;/th&gt;
+      &lt;th&gt;y&lt;/th&gt;
+      &lt;th&gt;sum&lt;/th&gt;
+      &lt;th&gt;action&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;11&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;pour large, small to large&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;12&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;7&lt;/td&gt;
+      &lt;td&gt;7&lt;/td&gt;
+      &lt;td&gt;fill small, small to large&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;13&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;pour large, small to large&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;14&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;fill small, small to large&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;15&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;7&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;fill small, small to large&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;…&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Notice steps 1 to 3 and steps 13 to 15 are the same. This is actually really good! It seems like we have exhausted all the possible combinations once the pattern repeats. Trying this on other examples confirms this observation.&lt;/p&gt;
+
+&lt;p&gt;The next step is to understand how we generated these numbers. Notice that we only &lt;code class=&quot;highlighter-rouge&quot;&gt;pour large, small to large&lt;/code&gt; when large is full? And notice that at that point &lt;code class=&quot;highlighter-rouge&quot;&gt;x&lt;/code&gt; represents the &lt;code class=&quot;highlighter-rouge&quot;&gt;overflow&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The overflow then serves to be the &lt;code class=&quot;highlighter-rouge&quot;&gt;base&lt;/code&gt; amount of water for the next iteration. The &lt;code class=&quot;highlighter-rouge&quot;&gt;base&lt;/code&gt; effectively modifies the size of the large jug and filling the large jug with different bases results in new sums of water. In fact, as long as there is &lt;code class=&quot;highlighter-rouge&quot;&gt;overflow&lt;/code&gt;, the algorithm will keep going.&lt;/p&gt;
+
+&lt;p&gt;An important step we need to figure out is how the algorithm terminates. Well, since we noticed that the algorithm started to generate repeated output after a while, we can examine the point at which the repeated output starts getting generated. We notice that it’s the point when &lt;code class=&quot;highlighter-rouge&quot;&gt;overflow=0&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Using this idea, we can write out the algorithm.&lt;/p&gt;
+
+&lt;p&gt;We would also need to be careful of edge cases, such as when &lt;code class=&quot;highlighter-rouge&quot;&gt;z == 0&lt;/code&gt; or one of the jugs has 0 size.&lt;/p&gt;
+
+&lt;h2 id=&quot;coded-solution-python&quot;&gt;Coded Solution (Python)&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def water_jug(self, x, y, z):
+    # edge cases
+    if z == 0:
+        return True
+    elif z &amp;gt; (x + y): 
+        return False
+    elif z == (x + y): 
+        return True
+    elif x == 0 or y == 0:
+        return False
+
+    # set small and large
+    if y &amp;gt; x:
+        s, l = x, y
+    else:
+        s, l = y, x
+
+    # start generating
+    base = 0
+
+    while True:
+        # determine overflow
+        overflow = 0
+        if (l - base) % s != 0:
+            overflow = s - (l - base) % s
+
+        if ((z - base) % s == 0) and (l + overflow) &amp;gt;= z:
+            return True
+            
+        # check terminating condition
+        if overflow == 0:
+            return False
+
+        base = overflow
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;graph-solution&quot;&gt;Graph Solution&lt;/h1&gt;
+
+&lt;p&gt;Another solution that is not as efficient, but easier to reason about, is to model the problem as a graph problem. The vertices are different &lt;code class=&quot;highlighter-rouge&quot;&gt;x&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;y&lt;/code&gt; combinations. Two vertices, &lt;code class=&quot;highlighter-rouge&quot;&gt;(x1, y1)&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;(x2, y2)&lt;/code&gt; have an edge between them if an action can change &lt;code class=&quot;highlighter-rouge&quot;&gt;x1&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;y1&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;x2&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;y2&lt;/code&gt;. Edges have direction. We can determine if we can get to z by breadth-first searching the entire graph and checking the sum of &lt;code class=&quot;highlighter-rouge&quot;&gt;x + y&lt;/code&gt; at each node.&lt;/p&gt;
+
+&lt;p&gt;Modelling problems with graphs not only makes it easier, it also makes for smart-sounding solutions.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 28 Jun 2016 01:35:16 -0400</pubDate>
+        <link>http://interviewperfect.github.io//interview-problem-water-jugs/</link>
+        <guid isPermaLink="true">http://interviewperfect.github.io//interview-problem-water-jugs/</guid>
+        
+        
+        <category>hard</category>
+        
+        <category>math</category>
+        
+      </item>
+    
+      <item>
+        <title>[Interview Problem] DNA Patterns</title>
+        <description>&lt;h2 id=&quot;problem&quot;&gt;Problem&lt;/h2&gt;
+
+&lt;p&gt;There are four main building blocks of DNA. They are known as nucleotides and can be denoted by characters A (adenine), C (cytosine), G (guanine), and T (thymine). A strand of DNA is made of a sequence of nucleotides and thus can be represented as a string composed of A, C, G, and T. For example, &lt;code class=&quot;highlighter-rouge&quot;&gt;ACGACTGCTAGCTTGCCGGGTA&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The problem is, given a strand of DNA, how do you efficiently find all 10-letter long sequences that occur more than once? Sequences can overlap.&lt;/p&gt;
+
+&lt;h2 id=&quot;solution&quot;&gt;Solution&lt;/h2&gt;
+
+&lt;p&gt;The brute force solution is to iterate through every single 10-letter long sequence and then check if another such sequence can be found in the overall sequence. The complexity of this solution is $O(n^2)$.&lt;/p&gt;
+
+&lt;p&gt;In the previous solution, you’ll probably notice that we would be iterating over a large portion of the DNA sequence repeatedly. The purpose is to check if our current 10-letter sequence appears again in the overall sequence. But we could invert this. As we iterate across the overall sequence, for each new 10-letter sequence we encounter, check if we have seen this sequence before. If we used a hash table to store all 10-letter sequences seen, then the check can be done in $O(1)$ and our new algorithm is $O(n)$.&lt;/p&gt;
+
+&lt;h2 id=&quot;coded-solution-pseudocode&quot;&gt;Coded solution (Pseudocode)&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hash_table = {}
+repeating = []
+for i in sequence.length - 10:
+  if sequence[i, i + 10] in hash_table:
+    Found a repeating sequence!
+  else:
+    hash_table.add(sequence[i, i + 10])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;suffix-trees&quot;&gt;Suffix trees&lt;/h2&gt;
+
+&lt;p&gt;This problem can also be solved using a suffix tree. Suffix trees are very useful when working with large bodies of text. For one, it allows us to search for the number of occurences of a substring in a body of text, no matter how large, in $O(m)$ time where $m$ is the length of the string. A suffix tree can be constructed in $O(n)$ time where $n$ is the length of the body of text.&lt;/p&gt;
+
+&lt;p&gt;So for our problem, given our overall sequence of DNA is length n, we construct the suffix tree in $O(n)$ time and then perform $10(n - 10) = O(n)$ queries of a substring of length 10. Each query takes a constant amount of time so the overall algorithm is $O(n)$.&lt;/p&gt;
+
+&lt;p&gt;However, this is a complex solution and the hash table solution is just as fast, takes up an inconsequential amount of extra space, and most importantly, is much simpler. That being said, it’s good to be aware of suffix trees and how useful they are for string processing.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 27 Jun 2016 12:01:02 -0400</pubDate>
+        <link>http://interviewperfect.github.io//interview-problem-dna-patterns/</link>
+        <guid isPermaLink="true">http://interviewperfect.github.io//interview-problem-dna-patterns/</guid>
+        
+        
+        <category>easy</category>
+        
+        <category>strings</category>
+        
+      </item>
     
       <item>
         <title>[Google Interview Question] Captive Go Stones</title>
@@ -103,7 +391,7 @@ print is_captive(2, 1, [
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Sun, 10 Apr 2016 03:40:20 -0700</pubDate>
+        <pubDate>Sun, 10 Apr 2016 06:40:20 -0400</pubDate>
         <link>http://interviewperfect.github.io//google-interview-question-captive-go-stones/</link>
         <guid isPermaLink="true">http://interviewperfect.github.io//google-interview-question-captive-go-stones/</guid>
         
@@ -293,7 +581,7 @@ def word_search(grid, search_string):
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Wed, 06 Apr 2016 23:19:20 -0700</pubDate>
+        <pubDate>Thu, 07 Apr 2016 02:19:20 -0400</pubDate>
         <link>http://interviewperfect.github.io//facebook-interview-problem-word-search/</link>
         <guid isPermaLink="true">http://interviewperfect.github.io//facebook-interview-problem-word-search/</guid>
         
@@ -371,7 +659,7 @@ def word_search(grid, search_string):
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Wed, 06 Apr 2016 21:20:00 -0700</pubDate>
+        <pubDate>Thu, 07 Apr 2016 00:20:00 -0400</pubDate>
         <link>http://interviewperfect.github.io//interview-problem-trailing-zeroes/</link>
         <guid isPermaLink="true">http://interviewperfect.github.io//interview-problem-trailing-zeroes/</guid>
         
@@ -422,7 +710,7 @@ def word_search(grid, search_string):
 
 &lt;p&gt;The complexity of both algorithms is $O(V + E)$ where $V$ is the number of vertices and $E$ is the number of edges.&lt;/p&gt;
 
-&lt;h2 id=&quot;code-solution-python&quot;&gt;Code solution (Python)&lt;/h2&gt;
+&lt;h2 id=&quot;coded-solution-python&quot;&gt;Coded solution (Python)&lt;/h2&gt;
 
 &lt;h3 id=&quot;bfs&quot;&gt;BFS&lt;/h3&gt;
 
@@ -495,7 +783,7 @@ def dfs_solution(num_courses, prerequisites):
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Sun, 03 Apr 2016 15:19:06 -0700</pubDate>
+        <pubDate>Sun, 03 Apr 2016 18:19:06 -0400</pubDate>
         <link>http://interviewperfect.github.io//interview-problem-maximum-keener/</link>
         <guid isPermaLink="true">http://interviewperfect.github.io//interview-problem-maximum-keener/</guid>
         
@@ -551,7 +839,7 @@ def dfs_solution(num_courses, prerequisites):
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Sat, 02 Apr 2016 21:57:05 -0700</pubDate>
+        <pubDate>Sun, 03 Apr 2016 00:57:05 -0400</pubDate>
         <link>http://interviewperfect.github.io//sort-a-k-sorted-array/</link>
         <guid isPermaLink="true">http://interviewperfect.github.io//sort-a-k-sorted-array/</guid>
         
@@ -636,7 +924,7 @@ def inefficient_solution(city):
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Sat, 02 Apr 2016 20:51:21 -0700</pubDate>
+        <pubDate>Sat, 02 Apr 2016 23:51:21 -0400</pubDate>
         <link>http://interviewperfect.github.io//interview-problem-godzilla-vs-2d-city/</link>
         <guid isPermaLink="true">http://interviewperfect.github.io//interview-problem-godzilla-vs-2d-city/</guid>
         
@@ -691,7 +979,7 @@ def inefficient_solution(city):
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Sat, 02 Apr 2016 00:58:26 -0700</pubDate>
+        <pubDate>Sat, 02 Apr 2016 03:58:26 -0400</pubDate>
         <link>http://interviewperfect.github.io//buying-stocks/</link>
         <guid isPermaLink="true">http://interviewperfect.github.io//buying-stocks/</guid>
         

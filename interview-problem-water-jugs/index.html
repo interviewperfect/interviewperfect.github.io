@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>[Interview Problem] Water Jugs</title>
+    <meta name="description" content="Problem">
+
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="canonical" href="http://interviewperfect.github.io//interview-problem-water-jugs/">
+    <link rel="alternate" type="application/rss+xml" title="InterviewPerfect" href="http://interviewperfect.github.io//feed.xml">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+    <!-- mathjax config similar to math.stackexchange -->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            jax: ["input/TeX", "output/HTML-CSS"],
+            tex2jax: {
+                inlineMath: [ ['$', '$'] ],
+                displayMath: [ ['$$', '$$']],
+                processEscapes: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            },
+            messageStyle: "none",
+            "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+        });
+
+        button = document.createElement("button");
+        button.className = "spoiler-button";
+        button.innerHTML = "spoiler";
+        button.onclick = function() {
+            $(".spoiler").show();
+            $(button).hide();
+        }
+        $(".spoiler").after(button)
+    </script>
+
+    
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">InterviewPerfect</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        <a class="page-link" href="categories">Categories</a>
+        
+          
+            
+              <a class="page-link" href="/about/">About</a>
+            
+          
+        
+          
+            
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">[Interview Problem] Water Jugs</h1>
+    <p class="post-meta">
+        
+            <a class="category category-hard" href="/categories/hard">hard</a>
+        
+            <a class="category category-math" href="/categories/math">math</a>
+        
+    </p>
+    <p class="post-meta">
+        <time datetime="2016-06-28T01:35:16-04:00" itemprop="datePublished">Jun 28, 2016</time>
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <h1 id="problem">Problem</h1>
+
+<p>You have two water jugs. One can hold <code class="highlighter-rouge">x</code> liters and another <code class="highlighter-rouge">y</code> liters. You want the total amount of water in the jugs to be <code class="highlighter-rouge">z</code> liters at the end but it’s not always possible. Here are the possible moves you can do.</p>
+
+<ol>
+  <li>Fully empty a jug</li>
+  <li>Fully fill a jug</li>
+  <li>Pour water from a jug to another jug until the latter is full or the former is empty</li>
+</ol>
+
+<p>Write a function that takes in <code class="highlighter-rouge">x</code>, <code class="highlighter-rouge">y</code>, and <code class="highlighter-rouge">z</code> and returns <code class="highlighter-rouge">true</code> or <code class="highlighter-rouge">false</code> depending on if holding <code class="highlighter-rouge">z</code> liters using the two jugs is possible.</p>
+
+<h1 id="arithmetic-solution">Arithmetic Solution</h1>
+
+<p>How I tackled the problem was by working with examples, trying to generate new <code class="highlighter-rouge">x</code> and <code class="highlighter-rouge">y</code> combinations within an example, and then trying to figure out a pattern in generating these combinations. The challenge with this approach is that it may seem disconnected and random at first but with patience, you’ll be able to find an efficient way to iterate through all possible <code class="highlighter-rouge">x</code> and <code class="highlighter-rouge">y</code> combinations.</p>
+
+<p>The first thing I did to make the problem easier is to not think in terms of <code class="highlighter-rouge">x</code> and <code class="highlighter-rouge">y</code> but small and large.</p>
+
+<p>The next thing I realized is that there is very little freedom in working with the large jug. When filling the large jug, you really have 3 options available at the end. You can pour it all out which is pointless, completely filling the small jug and pouring the small jug out, or completely filling the small jug and filling the large jug. You are offered much more flexibility in initiating actions with the small jug and manipulating the contents of the large jug using the small jug.</p>
+
+<p>Then, I made up an example and played around with it. Let’s try <code class="highlighter-rouge">x=5</code>, <code class="highlighter-rouge">y=7</code>, and <code class="highlighter-rouge">z=2</code>.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Step #</th>
+      <th>x</th>
+      <th>y</th>
+      <th>sum</th>
+      <th>action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>start</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>0</td>
+      <td>5</td>
+      <td>5</td>
+      <td>fill small, small to large</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>3</td>
+      <td>7</td>
+      <td>10</td>
+      <td>fill small, small to large</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>0</td>
+      <td>3</td>
+      <td>3</td>
+      <td>pour large, small to large</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>1</td>
+      <td>7</td>
+      <td>8</td>
+      <td>fill small, small to large</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>pour large, small to large</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>0</td>
+      <td>6</td>
+      <td>6</td>
+      <td>fill small, small to large</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>4</td>
+      <td>7</td>
+      <td>11</td>
+      <td>fill small, small to large</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>0</td>
+      <td>4</td>
+      <td>4</td>
+      <td>pour large, small to large</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>2</td>
+      <td>7</td>
+      <td>9</td>
+      <td>fill small, small to large</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>pour large, small to large</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The answer to the above problem is true, since we reached a sum of 2 which is what <code class="highlighter-rouge">z</code> is.</p>
+
+<p>The main takeaway from the above example is the generation of new values of <code class="highlighter-rouge">x</code> after each round. In fact, if you kept going you will realize the pattern repeats.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Step #</th>
+      <th>x</th>
+      <th>y</th>
+      <th>sum</th>
+      <th>action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>11</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>pour large, small to large</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>0</td>
+      <td>7</td>
+      <td>7</td>
+      <td>fill small, small to large</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>pour large, small to large</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>0</td>
+      <td>5</td>
+      <td>5</td>
+      <td>fill small, small to large</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>3</td>
+      <td>7</td>
+      <td>10</td>
+      <td>fill small, small to large</td>
+    </tr>
+    <tr>
+      <td>…</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Notice steps 1 to 3 and steps 13 to 15 are the same. This is actually really good! It seems like we have exhausted all the possible combinations once the pattern repeats. Trying this on other examples confirms this observation.</p>
+
+<p>The next step is to understand how we generated these numbers. Notice that we only <code class="highlighter-rouge">pour large, small to large</code> when large is full? And notice that at that point <code class="highlighter-rouge">x</code> represents the <code class="highlighter-rouge">overflow</code>.</p>
+
+<p>The overflow then serves to be the <code class="highlighter-rouge">base</code> amount of water for the next iteration. The <code class="highlighter-rouge">base</code> effectively modifies the size of the large jug and filling the large jug with different bases results in new sums of water. In fact, as long as there is <code class="highlighter-rouge">overflow</code>, the algorithm will keep going.</p>
+
+<p>An important step we need to figure out is how the algorithm terminates. Well, since we noticed that the algorithm started to generate repeated output after a while, we can examine the point at which the repeated output starts getting generated. We notice that it’s the point when <code class="highlighter-rouge">overflow=0</code>.</p>
+
+<p>Using this idea, we can write out the algorithm.</p>
+
+<p>We would also need to be careful of edge cases, such as when <code class="highlighter-rouge">z == 0</code> or one of the jugs has 0 size.</p>
+
+<h2 id="coded-solution-python">Coded Solution (Python)</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>def water_jug(self, x, y, z):
+    # edge cases
+    if z == 0:
+        return True
+    elif z &gt; (x + y): 
+        return False
+    elif z == (x + y): 
+        return True
+    elif x == 0 or y == 0:
+        return False
+
+    # set small and large
+    if y &gt; x:
+        s, l = x, y
+    else:
+        s, l = y, x
+
+    # start generating
+    base = 0
+
+    while True:
+        # determine overflow
+        overflow = 0
+        if (l - base) % s != 0:
+            overflow = s - (l - base) % s
+
+        if ((z - base) % s == 0) and (l + overflow) &gt;= z:
+            return True
+            
+        # check terminating condition
+        if overflow == 0:
+            return False
+
+        base = overflow
+</code></pre>
+</div>
+
+<h1 id="graph-solution">Graph Solution</h1>
+
+<p>Another solution that is not as efficient, but easier to reason about, is to model the problem as a graph problem. The vertices are different <code class="highlighter-rouge">x</code>, <code class="highlighter-rouge">y</code> combinations. Two vertices, <code class="highlighter-rouge">(x1, y1)</code> and <code class="highlighter-rouge">(x2, y2)</code> have an edge between them if an action can change <code class="highlighter-rouge">x1</code>, <code class="highlighter-rouge">y1</code> to <code class="highlighter-rouge">x2</code>, <code class="highlighter-rouge">y2</code>. Edges have direction. We can determine if we can get to z by breadth-first searching the entire graph and checking the sum of <code class="highlighter-rouge">x + y</code> at each node.</p>
+
+<p>Modelling problems with graphs not only makes it easier, it also makes for smart-sounding solutions.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">InterviewPerfect</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>Need to get a solution clarified? Want to correct an inaccuracy? General inquiries?</br></br> Please email me and I will try to reply as fast as possible: </li>
+          <li><a href="mailto:interviewperfectblog@gmail.com">interviewperfectblog@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Learn how to pass technical interviews from companies such as Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining the step-by-step logic behind each solution. Good luck in job searching!
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
