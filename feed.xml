@@ -2,12 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>InterviewPerfect</title>
-    <description>Learn how to pass technical interviews from companies such as Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining the step-by-step logic behind each solution. Good luck in job searching!
+    <description>Learn how to pass technical interviews from companies such as Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining the step-by-step logic behind each solution. Good luck job hunting!
 </description>
     <link>http://interviewperfect.github.io//</link>
     <atom:link href="http://interviewperfect.github.io//feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 29 Jun 2016 03:16:39 -0400</pubDate>
-    <lastBuildDate>Wed, 29 Jun 2016 03:16:39 -0400</lastBuildDate>
+    <pubDate>Sat, 02 Jul 2016 21:15:54 -0400</pubDate>
+    <lastBuildDate>Sat, 02 Jul 2016 21:15:54 -0400</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
     
       <item>

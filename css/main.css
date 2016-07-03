@@ -11,7 +11,7 @@ dl, dd, ol, ul, figure {
  * Basic styling
  */
 body {
-  font: 400 16px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: 400 16px/1.5 "Roboto", Helvetica, Arial, sans-serif;
   color: #111;
   background-color: #fdfdfd;
   -webkit-text-size-adjust: 100%;
@@ -71,8 +71,7 @@ a {
   a:visited {
     color: #1756a9; }
   a:hover {
-    color: #111;
-    text-decoration: underline; }
+    color: #5A5A5A !important; }
 
 /**
  * Blockquotes
@@ -145,13 +144,58 @@ pre {
     fill: #828282; }
 
 /**
+ * Pagination
+ */
+ul.pagination {
+  display: inline-block;
+  padding: 0;
+  margin: 0; }
+
+ul.pagination li {
+  display: inline; }
+
+ul.pagination li a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  margin: 0 4px; }
+
+ul.pagination li a.active {
+  background-color: #4CAF50;
+  color: white; }
+
+ul.pagination li a.inactive {
+  color: #888; }
+
+ul.pagination li a:hover:not(.active):not(.inactive) {
+  background-color: #ddd; }
+
+/**
+ * Others
+ */
+.card {
+  background-color: white;
+  border-radius: 2px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  padding: 16px; }
+
+.card h2 > a {
+  color: #222; }
+
+/**
  * Site header
  */
 .site-header {
   border-top: 5px solid #424242;
   border-bottom: 1px solid #e8e8e8;
   min-height: 56px;
-  position: relative; }
+  position: relative;
+  box-shadow: 0px 2px 5px #AAA;
+  position: fixed;
+  width: 100%;
+  background-color: white; }
 
 .site-title {
   font-size: 26px;
@@ -207,6 +251,10 @@ pre {
         margin-left: 20px; }
         .site-nav .page-link:not(:last-child) {
           margin-right: 0; } }
+
+.site-seller {
+  margin-bottom: 18px;
+  font-size: 18px; }
 
 /**
  * Site footer
@@ -264,16 +312,16 @@ pre {
  * Page content
  */
 .page-content {
-  padding: 30px 0; }
+  padding: 98px 0 30px 0; }
 
 .page-heading {
-  font-size: 20px; }
+  font-size: 42px; }
 
 .post-list {
   margin-left: 0;
   list-style: none; }
   .post-list > li {
-    margin-bottom: 30px; }
+    margin-bottom: 20px; }
 
 .post-meta {
   font-size: 14px;
@@ -514,11 +562,14 @@ table tr th :last-child, table tr td :last-child {
   margin-right: 2px;
   font-size: 14px; }
 
+.category:hover {
+  color: #DDD !important; }
+
 .category-heading {
   margin: 20px 0; }
 
 .category-easy {
-  background-color: green; }
+  background-color: #4CAF50; }
 
 .category-medium {
   background-color: orange; }
