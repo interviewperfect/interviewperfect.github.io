@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>[Interview Problem] Out of Gas?</title>
+    <meta name="description" content="Problem">
+
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="canonical" href="http://interviewperfect.github.io//interview-problem-out-of-gas/">
+    <link rel="alternate" type="application/rss+xml" title="InterviewPerfect" href="http://interviewperfect.github.io//feed.xml">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+    <!-- mathjax config similar to math.stackexchange -->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            jax: ["input/TeX", "output/HTML-CSS"],
+            tex2jax: {
+                inlineMath: [ ['$', '$'] ],
+                displayMath: [ ['$$', '$$']],
+                processEscapes: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            },
+            messageStyle: "none",
+            "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+        });
+
+        button = document.createElement("button");
+        button.className = "spoiler-button";
+        button.innerHTML = "spoiler";
+        button.onclick = function() {
+            $(".spoiler").show();
+            $(button).hide();
+        }
+        $(".spoiler").after(button)
+    </script>
+
+    
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">InterviewPerfect</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        <a class="page-link" href="/categories">Categories</a>
+        
+          
+            
+              <a class="page-link" href="/about/">About</a>
+            
+          
+        
+          
+            
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">[Interview Problem] Out of Gas?</h1>
+    <p class="post-meta">
+        
+            <a class="category category-medium" href="/categories/medium">medium</a>
+        
+            <a class="category category-arrays" href="/categories/arrays">arrays</a>
+        
+    </p>
+    <p class="post-meta">
+        <time datetime="2016-04-07T02:18:57-04:00" itemprop="datePublished">Apr 7, 2016</time>
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <h2 id="problem">Problem</h2>
+
+<p>There is a circular string of $N$ gas stations. You have a car that starts out at one gas station with an empty, unlimited gas tank. Each gas station contains some gas and the array <code class="highlighter-rouge">gas[]</code>, of size $N$, contains how much gas each gas station has. It takes a certain amount of gas to get from one gas station to another and the array <code class="highlighter-rouge">cost[]</code>, of size $N$, represents this. Specifically, <code class="highlighter-rouge">cost[i]</code> represents how much gas it takes to go from gas station $i$ to gas station $i + 1$.</p>
+
+<p>Anytime the cost of traveling from one gas station to the next is greater than the amount of gas we currently we have, we fail.</p>
+
+<p>Given a <code class="highlighter-rouge">gas[]</code> and <code class="highlighter-rouge">cost[]</code> pair, we want to know if a car can travel forwards all the way around the circuit at least once, starting from any gas station.</p>
+
+<p><strong>Runtime:</strong> ideally we can get an <span class="spoiler">$O(N)$</span> solution.</p>
+
+<h2 id="solution">Solution</h2>
+
+<p>The brute force solution would be to try to start at each gas station and attempt to make a full circuit.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>def out_of_gas(cost, gas):
+  for starting_station in len(cost):
+    success = True
+    current_station = starting_station
+    for i in len(cost):
+      current_station = (current_station + i) % len(cost)
+      gas_tank += (gas[starting_station] - cost[starting_station])
+      if gas_tank &lt; 0:
+        success = False
+        break
+    if success:
+      return starting_station
+  return -1
+</code></pre>
+</div>
+
+<p>This solution is $O(N^2)$ since we are trying potentially $N$ different starting points and going through potentially $N$ gas stations for each.</p>
+
+<p>When optimizing, one thing I always think about is whether there are repeated operations that can be avoided. This is definitely true for this question. Specifically, we are recalculating <code class="highlighter-rouge">gas_tank += gas[i] - cost[i]</code> over and over again.</p>
+
+<p>What if we stored <code class="highlighter-rouge">gas[i] - cost[i]</code> in a new array called <code class="highlighter-rouge">gascost[]</code>? Well we would still need to do <code class="highlighter-rouge">gas_tank += gascost[i]</code> $O(N^2)$ times, which is not ideal.</p>
+
+<p>We can be more clever.</p>
+
+<h3 id="better-solution">Better Solution</h3>
+
+<p>This solution allows us to “visit” any gas station at most twice. We do so by examining new starting gas stations in a backwards fashion. As we go along, we build and remember a chain of gas stations. Let’s call this chain the “successful chain” and <strong>its most important property is that, if we start from the chain’s first gas station with an empty tank, we can reach any gas station within this chain.</strong> The concept of the success chain allows us to achieve the aforementioned efficiency.</p>
+
+<p>Let’s use this example where gas stations 5, 6, and 7 are part of the successful chain. Throughout the algorithm we only ever maintain one successful chain.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>----------------------------
+-1-2-3-4-(5)-(6)-(7)-8-9-10-
+</code></pre>
+</div>
+
+<p>Since we’re moving backwards, the next step is to check if we can start at 4 and form a successful chain from 4 to 7. Since 5 to 7 is a successful chain, we just need to be able to reach 5 from 4 (which implies we have 0 or more gas left in our tank when we’re at 5). This means that <code class="highlighter-rouge">gascost[4]</code> needs to be 0 or greater. Remember, <code class="highlighter-rouge">gascost[4] = gas[4] - cost[4]</code>.</p>
+
+<ul>
+  <li>If <code class="highlighter-rouge">gascost[4] &lt; 0</code>, then 4 to 7 is not a successful chain and we move on to check 3 while storing <code class="highlighter-rouge">gascost[4]</code> in a <code class="highlighter-rouge">deficit</code> variable that is initialized to be 0.</li>
+  <li>If <code class="highlighter-rouge">gascost[4] &gt;= 0</code>, then 4 to 7 is a successful chain. Now we know we can start at 4 with an empty gas tank and reach 7.</li>
+</ul>
+
+<p>Assume <code class="highlighter-rouge">gascost[4] &lt; 0</code>, <code class="highlighter-rouge">deficit += gascost[4]</code>. We only keep track of one <code class="highlighter-rouge">deficit</code> variable. Whenever we try a new gas station and it doesn’t form the start of a successful chain, we add it’s <code class="highlighter-rouge">gascost</code> to the <code class="highlighter-rouge">deficit</code>. We know that a new gas station extends the start of the existing successful chain to itself if its <code class="highlighter-rouge">gascost</code> is greater than or equal to <code class="highlighter-rouge">deficit</code>. This means that the gas we get from this new gas station overcomes the deficit and allows us to reach the old successful chain. Again, once we reach the old successful chain we know we can always reach the last gas station in the chain.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>----------------------------
+-1-2-3-4-(5)-(6)-(7)-8-9-10-
+Deficit = gascost[4]
+</code></pre>
+</div>
+
+<p>Assume <code class="highlighter-rouge">gascost[3] &lt; deficit</code>, then we get to this state.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>----------------------------
+-1-2-3-4-(5)-(6)-(7)-8-9-10-
+Deficit = gascost[3] + gascost[4]
+</code></pre>
+</div>
+
+<p>Assume <code class="highlighter-rouge">gascost[2] &gt;= deficit</code>, then we get to this state. The gas we get from 2 is enough to help us drive past 3 and 4 to reach our existing successful chain of 5, 6, and 7. We enlarge our discovered successful chain and reset deficit back to 0.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>----------------------------------
+-1-(2)-(3)-(4)-(5)-(6)-(7)-8-9-10-
+Deficit = 0
+</code></pre>
+</div>
+
+<p>We keep repeating this procedure, either enlarging our deficit, or resetting our deficit and enlarging our successful chain. We stop when we reach a gas station that is the last gas station in the our existing successful chain.</p>
+
+<p>In this case it’s 7.</p>
+
+<ul>
+  <li>If <code class="highlighter-rouge">gascost[7] &gt;= deficit</code>, that means that 7 is the start of a successful chain that loops all the way around and ends at 7. As such, we return <code class="highlighter-rouge">true</code>. We are able to travel around the circuit of gas stations at least once, by starting at 7.</li>
+  <li>If <code class="highlighter-rouge">gascost[7] &lt; deficit</code>, that means that 7 does not form the start of a successful chain that loops all the way around and ends at 7.</li>
+</ul>
+
+<p>Assume <code class="highlighter-rouge">gascost[7] &lt; deficit</code>. At this point we need to try starting at different gas stations within our successful chain since we haven’t tried these gas stations.</p>
+
+<p>We move backwards as usual. This time we also take out gas stations from our successful chain. Since <code class="highlighter-rouge">gascost[7] &lt; deficit</code>, gas station 7 does not work as a starting point and we remove it from the chain. We assume 6 is the start and see if <code class="highlighter-rouge">gascost[6] &gt;= deficit</code>. If so, we know that we are able to complete a full circuit from gas station 6 and we return <code class="highlighter-rouge">true</code>. If not, we add <code class="highlighter-rouge">gascost[6]</code> to <code class="highlighter-rouge">deficit</code> and we remove 6 from the successful chain. This keeps going until we reach the first gas station in our successful chain. As this point, if we still aren’t able to make a full circuit, we return <code class="highlighter-rouge">false</code>.</p>
+
+<h3 id="analysis-and-explanation">Analysis and Explanation</h3>
+
+<p>The successful chain and the <code class="highlighter-rouge">deficit</code> variable stores what we have seen before. As such, we are able to only visit each gas station in the chain at most twice. Once when we are forming the chain and once at the end when we are testing different gas stations within the chain. We visit all other gas stations at most once.</p>
+
+<p>As such, we visit at most $2N$ gas stations and the run time is $O(N)$.</p>
+
+<p><strong>Why do we iterate through gas stations backwards?</strong> We can only build the successful chain backwards. For example, consider the chain <code class="highlighter-rouge">4-5-6-7</code>. If we can’t reach gas station 8, gas stations further will not be able to change this. We are stuck at 7. On the other hand, if we can’t reach 4 from 3, it’s possible that a previous gas station will provide enough gas so that we can indeed reach 4 from 3. That’s why we move backwards in constructing the chain</p>
+
+<h2 id="coded-solution-python">Coded solution (Python)</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>def out_of_gas(gas, cost):
+  successful_chain_start = None
+  successful_chain_end = None
+  deficit = 0
+  gas_station_idx = len(cost) - 1
+  
+  # Find a gas station to start, this will be the first gas station in our successful chain
+  while True:
+      gascost = gas[gas_station_idx] - cost[gas_station_idx]
+      if gascost &gt;= 0:
+          successful_chain_start = gas_station_idx
+          successful_chain_end = gas_station_idx   
+          gas_station_idx = (gas_station_idx - 1 + len(cost)) % len(cost)
+          break
+      gas_station_idx = (gas_station_idx - 1 + len(cost)) % len(cost)
+      if gas_station_idx == len(cost) - 1:
+          return -1
+  
+  # Initial construction of successful chain
+  while True:
+      gascost = gas[gas_station_idx] - cost[gas_station_idx]
+      if gascost + deficit &gt;= 0:
+          successful_chain_start = gas_station_idx
+          deficit = 0
+      else:
+          deficit += gascost
+      if gas_station_idx == successful_chain_end:
+          if deficit == 0:
+              return gas_station_idx
+          else:
+              gas_station_idx = (gas_station_idx - 1 + len(cost)) % len(cost)
+              break
+      gas_station_idx = (gas_station_idx - 1 + len(cost)) % len(cost)
+  
+  # Check if we can start from any gas stations within our successful chain (we haven't tried starting from these)
+  while True:
+      deficit += gas[gas_station_idx] - cost[gas_station_idx]
+      if deficit &gt;= 0:
+          return gas_station_idx
+      if gas_station_idx == successful_chain_start:
+          return -1
+      gas_station_idx = (gas_station_idx - 1 + len(cost)) % len(cost)
+</code></pre>
+</div>
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">InterviewPerfect</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>Need to get a solution clarified? Want to correct an inaccuracy? General inquiries?</br></br> Please email me and I will try to reply as fast as possible: </li>
+          <li><a href="mailto:interviewperfectblog@gmail.com">interviewperfectblog@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Learn how to pass technical interviews from companies such as Google, Facebook, and LinkedIn with flying colours. InterviewPerfect is a blog dedicated to solving interview questions, and explaining the step-by-step logic behind each solution. Good luck job hunting!
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

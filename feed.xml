@@ -6,8 +6,8 @@
 </description>
     <link>http://interviewperfect.github.io//</link>
     <atom:link href="http://interviewperfect.github.io//feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 02 Jul 2016 21:15:54 -0400</pubDate>
-    <lastBuildDate>Sat, 02 Jul 2016 21:15:54 -0400</lastBuildDate>
+    <pubDate>Mon, 04 Jul 2016 00:40:03 -0400</pubDate>
+    <lastBuildDate>Mon, 04 Jul 2016 00:40:03 -0400</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
     
       <item>
@@ -595,6 +595,167 @@ def word_search(grid, search_string):
       </item>
     
       <item>
+        <title>[Interview Problem] Out of Gas?</title>
+        <description>&lt;h2 id=&quot;problem&quot;&gt;Problem&lt;/h2&gt;
+
+&lt;p&gt;There is a circular string of $N$ gas stations. You have a car that starts out at one gas station with an empty, unlimited gas tank. Each gas station contains some gas and the array &lt;code class=&quot;highlighter-rouge&quot;&gt;gas[]&lt;/code&gt;, of size $N$, contains how much gas each gas station has. It takes a certain amount of gas to get from one gas station to another and the array &lt;code class=&quot;highlighter-rouge&quot;&gt;cost[]&lt;/code&gt;, of size $N$, represents this. Specifically, &lt;code class=&quot;highlighter-rouge&quot;&gt;cost[i]&lt;/code&gt; represents how much gas it takes to go from gas station $i$ to gas station $i + 1$.&lt;/p&gt;
+
+&lt;p&gt;Anytime the cost of traveling from one gas station to the next is greater than the amount of gas we currently we have, we fail.&lt;/p&gt;
+
+&lt;p&gt;Given a &lt;code class=&quot;highlighter-rouge&quot;&gt;gas[]&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;cost[]&lt;/code&gt; pair, we want to know if a car can travel forwards all the way around the circuit at least once, starting from any gas station.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Runtime:&lt;/strong&gt; ideally we can get an &lt;span class=&quot;spoiler&quot;&gt;$O(N)$&lt;/span&gt; solution.&lt;/p&gt;
+
+&lt;h2 id=&quot;solution&quot;&gt;Solution&lt;/h2&gt;
+
+&lt;p&gt;The brute force solution would be to try to start at each gas station and attempt to make a full circuit.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def out_of_gas(cost, gas):
+  for starting_station in len(cost):
+    success = True
+    current_station = starting_station
+    for i in len(cost):
+      current_station = (current_station + i) % len(cost)
+      gas_tank += (gas[starting_station] - cost[starting_station])
+      if gas_tank &amp;lt; 0:
+        success = False
+        break
+    if success:
+      return starting_station
+  return -1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This solution is $O(N^2)$ since we are trying potentially $N$ different starting points and going through potentially $N$ gas stations for each.&lt;/p&gt;
+
+&lt;p&gt;When optimizing, one thing I always think about is whether there are repeated operations that can be avoided. This is definitely true for this question. Specifically, we are recalculating &lt;code class=&quot;highlighter-rouge&quot;&gt;gas_tank += gas[i] - cost[i]&lt;/code&gt; over and over again.&lt;/p&gt;
+
+&lt;p&gt;What if we stored &lt;code class=&quot;highlighter-rouge&quot;&gt;gas[i] - cost[i]&lt;/code&gt; in a new array called &lt;code class=&quot;highlighter-rouge&quot;&gt;gascost[]&lt;/code&gt;? Well we would still need to do &lt;code class=&quot;highlighter-rouge&quot;&gt;gas_tank += gascost[i]&lt;/code&gt; $O(N^2)$ times, which is not ideal.&lt;/p&gt;
+
+&lt;p&gt;We can be more clever.&lt;/p&gt;
+
+&lt;h3 id=&quot;better-solution&quot;&gt;Better Solution&lt;/h3&gt;
+
+&lt;p&gt;This solution allows us to “visit” any gas station at most twice. We do so by examining new starting gas stations in a backwards fashion. As we go along, we build and remember a chain of gas stations. Let’s call this chain the “successful chain” and &lt;strong&gt;its most important property is that, if we start from the chain’s first gas station with an empty tank, we can reach any gas station within this chain.&lt;/strong&gt; The concept of the success chain allows us to achieve the aforementioned efficiency.&lt;/p&gt;
+
+&lt;p&gt;Let’s use this example where gas stations 5, 6, and 7 are part of the successful chain. Throughout the algorithm we only ever maintain one successful chain.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;----------------------------
+-1-2-3-4-(5)-(6)-(7)-8-9-10-
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Since we’re moving backwards, the next step is to check if we can start at 4 and form a successful chain from 4 to 7. Since 5 to 7 is a successful chain, we just need to be able to reach 5 from 4 (which implies we have 0 or more gas left in our tank when we’re at 5). This means that &lt;code class=&quot;highlighter-rouge&quot;&gt;gascost[4]&lt;/code&gt; needs to be 0 or greater. Remember, &lt;code class=&quot;highlighter-rouge&quot;&gt;gascost[4] = gas[4] - cost[4]&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;If &lt;code class=&quot;highlighter-rouge&quot;&gt;gascost[4] &amp;lt; 0&lt;/code&gt;, then 4 to 7 is not a successful chain and we move on to check 3 while storing &lt;code class=&quot;highlighter-rouge&quot;&gt;gascost[4]&lt;/code&gt; in a &lt;code class=&quot;highlighter-rouge&quot;&gt;deficit&lt;/code&gt; variable that is initialized to be 0.&lt;/li&gt;
+  &lt;li&gt;If &lt;code class=&quot;highlighter-rouge&quot;&gt;gascost[4] &amp;gt;= 0&lt;/code&gt;, then 4 to 7 is a successful chain. Now we know we can start at 4 with an empty gas tank and reach 7.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Assume &lt;code class=&quot;highlighter-rouge&quot;&gt;gascost[4] &amp;lt; 0&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;deficit += gascost[4]&lt;/code&gt;. We only keep track of one &lt;code class=&quot;highlighter-rouge&quot;&gt;deficit&lt;/code&gt; variable. Whenever we try a new gas station and it doesn’t form the start of a successful chain, we add it’s &lt;code class=&quot;highlighter-rouge&quot;&gt;gascost&lt;/code&gt; to the &lt;code class=&quot;highlighter-rouge&quot;&gt;deficit&lt;/code&gt;. We know that a new gas station extends the start of the existing successful chain to itself if its &lt;code class=&quot;highlighter-rouge&quot;&gt;gascost&lt;/code&gt; is greater than or equal to &lt;code class=&quot;highlighter-rouge&quot;&gt;deficit&lt;/code&gt;. This means that the gas we get from this new gas station overcomes the deficit and allows us to reach the old successful chain. Again, once we reach the old successful chain we know we can always reach the last gas station in the chain.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;----------------------------
+-1-2-3-4-(5)-(6)-(7)-8-9-10-
+Deficit = gascost[4]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Assume &lt;code class=&quot;highlighter-rouge&quot;&gt;gascost[3] &amp;lt; deficit&lt;/code&gt;, then we get to this state.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;----------------------------
+-1-2-3-4-(5)-(6)-(7)-8-9-10-
+Deficit = gascost[3] + gascost[4]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Assume &lt;code class=&quot;highlighter-rouge&quot;&gt;gascost[2] &amp;gt;= deficit&lt;/code&gt;, then we get to this state. The gas we get from 2 is enough to help us drive past 3 and 4 to reach our existing successful chain of 5, 6, and 7. We enlarge our discovered successful chain and reset deficit back to 0.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;----------------------------------
+-1-(2)-(3)-(4)-(5)-(6)-(7)-8-9-10-
+Deficit = 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We keep repeating this procedure, either enlarging our deficit, or resetting our deficit and enlarging our successful chain. We stop when we reach a gas station that is the last gas station in the our existing successful chain.&lt;/p&gt;
+
+&lt;p&gt;In this case it’s 7.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;If &lt;code class=&quot;highlighter-rouge&quot;&gt;gascost[7] &amp;gt;= deficit&lt;/code&gt;, that means that 7 is the start of a successful chain that loops all the way around and ends at 7. As such, we return &lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;. We are able to travel around the circuit of gas stations at least once, by starting at 7.&lt;/li&gt;
+  &lt;li&gt;If &lt;code class=&quot;highlighter-rouge&quot;&gt;gascost[7] &amp;lt; deficit&lt;/code&gt;, that means that 7 does not form the start of a successful chain that loops all the way around and ends at 7.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Assume &lt;code class=&quot;highlighter-rouge&quot;&gt;gascost[7] &amp;lt; deficit&lt;/code&gt;. At this point we need to try starting at different gas stations within our successful chain since we haven’t tried these gas stations.&lt;/p&gt;
+
+&lt;p&gt;We move backwards as usual. This time we also take out gas stations from our successful chain. Since &lt;code class=&quot;highlighter-rouge&quot;&gt;gascost[7] &amp;lt; deficit&lt;/code&gt;, gas station 7 does not work as a starting point and we remove it from the chain. We assume 6 is the start and see if &lt;code class=&quot;highlighter-rouge&quot;&gt;gascost[6] &amp;gt;= deficit&lt;/code&gt;. If so, we know that we are able to complete a full circuit from gas station 6 and we return &lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;. If not, we add &lt;code class=&quot;highlighter-rouge&quot;&gt;gascost[6]&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;deficit&lt;/code&gt; and we remove 6 from the successful chain. This keeps going until we reach the first gas station in our successful chain. As this point, if we still aren’t able to make a full circuit, we return &lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;analysis-and-explanation&quot;&gt;Analysis and Explanation&lt;/h3&gt;
+
+&lt;p&gt;The successful chain and the &lt;code class=&quot;highlighter-rouge&quot;&gt;deficit&lt;/code&gt; variable stores what we have seen before. As such, we are able to only visit each gas station in the chain at most twice. Once when we are forming the chain and once at the end when we are testing different gas stations within the chain. We visit all other gas stations at most once.&lt;/p&gt;
+
+&lt;p&gt;As such, we visit at most $2N$ gas stations and the run time is $O(N)$.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Why do we iterate through gas stations backwards?&lt;/strong&gt; We can only build the successful chain backwards. For example, consider the chain &lt;code class=&quot;highlighter-rouge&quot;&gt;4-5-6-7&lt;/code&gt;. If we can’t reach gas station 8, gas stations further will not be able to change this. We are stuck at 7. On the other hand, if we can’t reach 4 from 3, it’s possible that a previous gas station will provide enough gas so that we can indeed reach 4 from 3. That’s why we move backwards in constructing the chain&lt;/p&gt;
+
+&lt;h2 id=&quot;coded-solution-python&quot;&gt;Coded solution (Python)&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def out_of_gas(gas, cost):
+  successful_chain_start = None
+  successful_chain_end = None
+  deficit = 0
+  gas_station_idx = len(cost) - 1
+  
+  # Find a gas station to start, this will be the first gas station in our successful chain
+  while True:
+      gascost = gas[gas_station_idx] - cost[gas_station_idx]
+      if gascost &amp;gt;= 0:
+          successful_chain_start = gas_station_idx
+          successful_chain_end = gas_station_idx   
+          gas_station_idx = (gas_station_idx - 1 + len(cost)) % len(cost)
+          break
+      gas_station_idx = (gas_station_idx - 1 + len(cost)) % len(cost)
+      if gas_station_idx == len(cost) - 1:
+          return -1
+  
+  # Initial construction of successful chain
+  while True:
+      gascost = gas[gas_station_idx] - cost[gas_station_idx]
+      if gascost + deficit &amp;gt;= 0:
+          successful_chain_start = gas_station_idx
+          deficit = 0
+      else:
+          deficit += gascost
+      if gas_station_idx == successful_chain_end:
+          if deficit == 0:
+              return gas_station_idx
+          else:
+              gas_station_idx = (gas_station_idx - 1 + len(cost)) % len(cost)
+              break
+      gas_station_idx = (gas_station_idx - 1 + len(cost)) % len(cost)
+  
+  # Check if we can start from any gas stations within our successful chain (we haven&#39;t tried starting from these)
+  while True:
+      deficit += gas[gas_station_idx] - cost[gas_station_idx]
+      if deficit &amp;gt;= 0:
+          return gas_station_idx
+      if gas_station_idx == successful_chain_start:
+          return -1
+      gas_station_idx = (gas_station_idx - 1 + len(cost)) % len(cost)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Thu, 07 Apr 2016 02:18:57 -0400</pubDate>
+        <link>http://interviewperfect.github.io//interview-problem-out-of-gas/</link>
+        <guid isPermaLink="true">http://interviewperfect.github.io//interview-problem-out-of-gas/</guid>
+        
+        
+        <category>medium</category>
+        
+        <category>arrays</category>
+        
+      </item>
+    
+      <item>
         <title>[Interview Problem] Trailing Zeroes</title>
         <description>&lt;p&gt;Sweet and easy to understand problem. Probably hard to solve?&lt;/p&gt;
 
@@ -621,7 +782,7 @@ def word_search(grid, search_string):
 2) 10 can be factorized to prime numbers 2 and 5, so we are really interested in the number of 2 and 5 pairs
 3) Since the number of 2 factors is always greater than or equal to the number of 5 factors in a factorial, we only need to worry about the number of 5 factors&lt;/p&gt;
 
-&lt;h2 id=&quot;code-solution-python&quot;&gt;Code solution (Python)&lt;/h2&gt;
+&lt;h2 id=&quot;coded-solution-python&quot;&gt;Coded solution (Python)&lt;/h2&gt;
 
 &lt;h3 id=&quot;brute-force&quot;&gt;Brute force&lt;/h3&gt;
 
