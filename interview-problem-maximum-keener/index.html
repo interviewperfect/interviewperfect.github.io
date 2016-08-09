@@ -161,13 +161,11 @@
 
 <p>After understanding that this is a graph problem, we need to try to establish connections between certain graph properties and the problem’s properties. We note that in the problem definition, the example of a course schedule that does not work has a directed cycle in its graph. Specifically, the entire graph that represents that schedule is a directed cycle.</p>
 
-<div class="image-center"><img src="http://imgur.com/gI9dKto.jpg" width="400" /></div>
+<div class="image-center"><img src="http://imgur.com/urYUAhi.jpg" width="400" /></div>
 
-<p>Now exploring this directed cycle idea further, we notice that for any course schedule who’s corresponding graph has a schedule, we will not be able to take all courses in the schedule. So all we need now is an algorithm that can quickly detect a directed cycle in a graph.</p>
+<p>Now exploring this directed cycle idea further, we notice that for any course schedule who’s corresponding graph has a directed cycle, we will not be able to take all courses in the schedule. So all we need now is an algorithm that can quickly detect a directed cycle in a graph.</p>
 
-<div class="image-center"><img src="http://imgur.com/J3esOZb.jpg" width="400" /></div>
-
-<p>Fortunately, this is a very popular problem and one method to detect directed cycles in a directed graph is to perform a <strong>topological sort</strong> on its nodes. The definition of a topological sort by Wikipedia is:</p>
+<p>Fortunately, this is a very popular problem and one method to detect directed cycles in a directed graph is to perform a <strong>topological sort</strong> on its nodes. The definition of a topological sort from Wikipedia is:</p>
 
 <blockquote>
   <p>A linear ordering of its vertices such that for every directed edge uv from vertex u to vertex v, u comes before v in the ordering</p>
