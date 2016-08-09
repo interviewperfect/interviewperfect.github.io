@@ -6,8 +6,8 @@
 </description>
     <link>http://interviewperfect.github.io//</link>
     <atom:link href="http://interviewperfect.github.io//feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 09 Aug 2016 02:24:54 -0400</pubDate>
-    <lastBuildDate>Tue, 09 Aug 2016 02:24:54 -0400</lastBuildDate>
+    <pubDate>Tue, 09 Aug 2016 02:25:41 -0400</pubDate>
+    <lastBuildDate>Tue, 09 Aug 2016 02:25:41 -0400</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
     
       <item>
@@ -855,7 +855,7 @@ Deficit = 0
 
 &lt;p&gt;After understanding that this is a graph problem, we need to try to establish connections between certain graph properties and the problem’s properties. We note that in the problem definition, the example of a course schedule that does not work has a directed cycle in its graph. Specifically, the entire graph that represents that schedule is a directed cycle.&lt;/p&gt;
 
-&lt;div class=&quot;image-center&quot;&gt;&lt;img src=&quot;http://imgur.com/urYUAhi.jpg&quot; width=&quot;400&quot; /&gt;&lt;/div&gt;
+&lt;div class=&quot;image-center&quot;&gt;&lt;img src=&quot;http://imgur.com/urYUAhi.jpg&quot; width=&quot;360&quot; /&gt;&lt;/div&gt;
 
 &lt;p&gt;Now exploring this directed cycle idea further, we notice that for any course schedule who’s corresponding graph has a directed cycle, we will not be able to take all courses in the schedule. So all we need now is an algorithm that can quickly detect a directed cycle in a graph.&lt;/p&gt;
 
